@@ -7,3 +7,5 @@
 
 - name: set hardware clock
   command: hwclock --systohc
+  args:
+    creates: /etc/adjtime
