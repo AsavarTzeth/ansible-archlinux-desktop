@@ -1,0 +1,16 @@
+---
+- name: setup locale.gen
+  template:
+    src: locale.gen.j2
+    dest: /etc/locale.gen
+  notify: locale-regen
+
+- name: setup locale.conf
+  template:
+    src: locale.conf.j2
+    dest: /etc/locale.conf
+
+- name: setup vconsole.conf
+  template:
+    src: vconsole.conf.j2
+    dest: /etc/vconsole.conf
