@@ -1,0 +1,10 @@
+- hosts: localhost
+  become: true
+  become_method: sudo
+  gather_facts: true
+  connection: local
+
+  roles:
+    - time-zone
+    - locale
+    - network

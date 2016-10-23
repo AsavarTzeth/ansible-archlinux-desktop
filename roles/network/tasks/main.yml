@@ -1,0 +1,10 @@
+---
+- name: setup hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: setup hostname
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
