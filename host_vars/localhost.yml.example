@@ -1,3 +1,18 @@
 ---
+# NOTE: Before you start using this file!
+
+# - Make sure to rename this file to localhost.yml
+#
+# - Keep this file secure! Specifically, if values such as root_pass
+#   and root_pass_salt are defined you should encrypt this file using
+#   something like ansible-vault.
+#
+# - Once renamed, this file is part of .gitignore. Please don't change
+#   this unless you know what you are doing. Even once encrypted, you
+#   don't want to share your secrets unless you need to.
+
 # Hostname
 arch_hostname: myhostname
+# Root Password
+root_pass: myrootpass
+root_pass_salt: mybadassalt
