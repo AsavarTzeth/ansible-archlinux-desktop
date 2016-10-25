@@ -1,0 +1,8 @@
+---
+reflector_files:
+  - src: mirrorupgrade.hook.j2
+    dest: /etc/pacman.d/hooksl
+  - src: reflector.service.j2
+    dest: /etc/systemd/system/reflector.service
+  - src: reflector.timer.j2
+    dest: /etc/systemd/system/reflector.timer

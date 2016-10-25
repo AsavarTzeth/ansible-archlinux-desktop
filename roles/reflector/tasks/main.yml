@@ -1,0 +1,18 @@
+---
+- name: install reflector
+  pacman:
+    name: reflector
+    state: latest
+    update_cache: true
+
+- name: setup reflector
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ reflector_files }}"
+
+- name: enable reflector.timer
+  service:
+    name: reflector.timer
+    state: started
+    enabled: true

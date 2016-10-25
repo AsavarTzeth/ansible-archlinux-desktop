@@ -9,3 +9,4 @@
     - network
     - root
     - systemd-boot
+    - reflector
