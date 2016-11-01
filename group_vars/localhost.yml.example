@@ -1,0 +1,26 @@
+---
+# NOTE: Before you start using this file!
+
+# - Make sure to rename this file to localhost.yml (or equivalent)
+#
+# - Keep this file secure! Specifically, if values such as passwd
+#   and passwd_salt are defined you should encrypt this file using
+#   something like ansible-vault.
+#
+# - Once renamed, this file is part of .gitignore. Please don't change
+#   this unless you know what you are doing. Even once encrypted, you
+#   don't want to share your secrets unless you need to.
+
+# Users & Groups
+#users_default_shell: /bin/bash
+#users:
+#  - username:
+#    name: user1
+#    groups: ['group1','group2']
+#    shell: /bin/sh
+#    passwd: a-plain-text-password
+#    passwd_salt: a-unique-salt
+#    state: present
+#    ssh_authorized_keys:
+#      - "ssh-rsa AAAAA.... foo@machine"
+#      - "ssh-rsa AAAAB.... bar@machine"

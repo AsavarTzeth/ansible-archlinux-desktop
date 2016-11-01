@@ -10,3 +10,4 @@
     - root
     - systemd-boot
     - reflector
+    - users
