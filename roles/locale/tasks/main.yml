@@ -4,13 +4,16 @@
     src: locale.gen.j2
     dest: /etc/locale.gen
   notify: locale-regen
+  tags: locale
 
 - name: setup locale.conf
   template:
     src: locale.conf.j2
     dest: /etc/locale.conf
+  tags: locale
 
 - name: setup vconsole.conf
   template:
     src: vconsole.conf.j2
     dest: /etc/vconsole.conf
+  tags: locale

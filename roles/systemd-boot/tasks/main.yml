@@ -5,23 +5,28 @@
     state: latest
     update_cache: true
   when: "'GenuineIntel' in ansible_processor"
+  tags: systemd-boot
 
 - name: setup systemd-boot esp
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items: "{{ systemd_boot_efi_files }}"
+  tags: systemd-boot
 
 - name: setup systemd-boot menu
   template:
     src: loader.conf.j2
     dest: /boot/loader/loader.conf
+  tags: systemd-boot
 
 - name: register root device
   shell: 'cat /etc/fstab | egrep "\s/\s" | cut -d" " -f1'
   register: root_uuid
+  tags: systemd-boot
 
 - name: setup systemd-boot entries
   template:
     src: "entries/arch.conf.j2"
     dest: "/boot/loader/entries/arch.conf"
+  tags: systemd-boot

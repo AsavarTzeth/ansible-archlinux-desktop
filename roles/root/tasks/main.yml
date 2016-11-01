@@ -5,3 +5,4 @@
     password: "{{ root_pass | password_hash('sha512',root_pass_salt) }}"
   when: root_pass is defined or root_pass != ''
   no_log: true
+  tags: root

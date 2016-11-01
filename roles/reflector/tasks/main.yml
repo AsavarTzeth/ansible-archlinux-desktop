@@ -4,15 +4,18 @@
     name: reflector
     state: latest
     update_cache: true
+  tags: reflector
 
 - name: setup reflector
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items: "{{ reflector_files }}"
+  tags: reflector
 
 - name: enable reflector.timer
   service:
     name: reflector.timer
     state: started
     enabled: true
+  tags: reflector
