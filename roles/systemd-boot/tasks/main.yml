@@ -23,6 +23,7 @@
 - name: register root device
   shell: 'cat /etc/fstab | egrep "\s/\s" | cut -d" " -f1'
   register: root_uuid
+  changed_when: false
   tags: systemd-boot
 
 - name: setup systemd-boot entries
