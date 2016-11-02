@@ -11,3 +11,4 @@
     - systemd-boot
     - reflector
     - users
+    - sudo

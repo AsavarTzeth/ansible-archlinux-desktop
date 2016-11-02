@@ -1,0 +1,40 @@
+---
+- name: install sudo package
+  pacman:
+    name: sudo
+    state: installed
+    update_cache: true
+  tags: sudo
+
+- name: include sudoers.d
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: '^#includedir '
+    line: '#includedir /etc/sudoers.d'
+    mode: 0440
+    validate: visudo -cf %s
+  tags: sudo
+
+- name: ensure group exists
+  group:
+    name: "{{ sudo_group }}"
+    gid: "{{ sudo_group_gid | default(omit) }}"
+    system: true
+  when: sudo_group is defined
+  tags: sudo
+
+- name: setup sudo for group
+  template:
+    src: 95-ansible-group
+    dest: /etc/sudoers.d/95-ansible-group
+    mode: 0440
+    validate: visudo -cf %s
+  when: sudo_group is defined
+  tags: sudo
+
+- name: remove sudo for group
+  file:
+    path: /etc/sudoers.d/95-ansible-group
+    state: absent
+  when: sudo_group is undefined
+  tags: sudo
