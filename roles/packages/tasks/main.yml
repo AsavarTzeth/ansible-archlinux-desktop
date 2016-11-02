@@ -1,0 +1,6 @@
+---
+- name: install user packages
+  pacman:
+    name: "{{ item }}"
+  with_items: "{{ packages }}"
+  tags: packages

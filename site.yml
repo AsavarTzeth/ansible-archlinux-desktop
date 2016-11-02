@@ -13,3 +13,4 @@
     - users
     - sudo
     - systemd-timesyncd
+    - packages

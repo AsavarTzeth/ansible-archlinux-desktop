@@ -29,3 +29,8 @@
 #sudo_group: wheel
 #sudo_group_gid: 10
 #sudo_group_string: ALL=(ALL) ALL
+
+# Packages
+#packages:
+#  - vim
+#  - fish
