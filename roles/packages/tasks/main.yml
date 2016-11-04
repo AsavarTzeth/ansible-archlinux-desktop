@@ -1,22 +1,16 @@
 ---
-- name: add [local] section
+- name: include multilib
   lineinfile:
     dest: /etc/pacman.conf
-    regexp: '^\[local\]'
-    line: '[local]'
-  tags: packages
-
-- name: include ansible.conf
-  lineinfile:
-    dest: /etc/pacman.conf
-    regexp: '^Include = /etc/pacman.d/ansible.conf'
-    line: 'Include = /etc/pacman.d/ansible.conf'
+    regexp: '^Include = /etc/pacman.d/multilib'
+    line: 'Include = /etc/pacman.d/multilib'
+  when: ansible_architecture == "x86_64"
   tags: packages
 
 - name: add multilib support
   template:
-    src: ansible.conf
-    dest: /etc/pacman.d/ansible.conf
+    src: multilib
+    dest: /etc/pacman.d/multilib
   when: ansible_architecture == "x86_64"
   tags: packages
 
