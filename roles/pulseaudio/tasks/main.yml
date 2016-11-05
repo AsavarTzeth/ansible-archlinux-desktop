@@ -1,0 +1,21 @@
+---
+- name: install pulseaudio
+  pacman:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - pulseaudio
+    - pulseaudio-alsa
+  tags: pulseaudio
+
+- name: install 32-bit libs
+  pacman:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - lib32-libpulse
+    - lib32-alsa-plugins
+  when: ansible_architecture == "x86_64"
+  tags: pulseaudio

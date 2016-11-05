@@ -15,3 +15,4 @@
     - systemd-timesyncd
     - packages
     - networkmanager
+    - pulseaudio
