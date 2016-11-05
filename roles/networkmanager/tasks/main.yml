@@ -1,0 +1,14 @@
+---
+- name: install networkmanager
+  pacman:
+    name: networkmanager
+    update_cache: true
+    state: present
+  tags: networkmanager
+
+- name: start networkmanager
+  service:
+    name: NetworkManager
+    state: started
+    enabled: true
+  tags: networkmanager
