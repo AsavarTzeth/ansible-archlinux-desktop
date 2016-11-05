@@ -1,0 +1,7 @@
+---
+- name: install vulkan-icd-loader
+  pacman:
+    name: vulkan-icd-loader
+    update_cache: true
+    state: present
+  tags: vulkan
