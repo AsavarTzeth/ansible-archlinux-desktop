@@ -1,0 +1,7 @@
+---
+- name: install xorg-server
+  pacman:
+    name: xorg-server
+    update_cache: true
+    state: present
+  tags: xorg

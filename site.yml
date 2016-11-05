@@ -16,4 +16,5 @@
     - packages
     - networkmanager
     - pulseaudio
+    - xorg
     - nvidia
