@@ -3,19 +3,13 @@
   pacman:
     name: "{{ item }}"
     update_cache: true
-    state: present
-  with_items:
-    - pulseaudio
-    - pulseaudio-alsa
+  with_items: "{{ pulseaudio.packages.x86_64 }}"
   tags: pulseaudio
 
 - name: install 32-bit libs
   pacman:
     name: "{{ item }}"
     update_cache: true
-    state: present
-  with_items:
-    - lib32-libpulse
-    - lib32-alsa-plugins
+  with_items: "{{ pulseaudio.packages.x86 }}"
   when: ansible_architecture == "x86_64"
   tags: pulseaudio

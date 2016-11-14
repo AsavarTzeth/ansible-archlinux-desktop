@@ -1,0 +1,8 @@
+pulseaudio:
+  packages:
+    x86_64:
+      - pulseaudio
+      - pulseaudio-alsa
+    x86:
+      - lib32-libpulse
+      - lib32-alsa-plugins

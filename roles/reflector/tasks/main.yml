@@ -2,7 +2,6 @@
 - name: install reflector
   pacman:
     name: reflector
-    state: latest
     update_cache: true
   tags: reflector
 
@@ -10,7 +9,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-  with_items: "{{ reflector_files }}"
+  with_items: "{{ reflector.files }}"
   tags: reflector
 
 - name: enable reflector.timer

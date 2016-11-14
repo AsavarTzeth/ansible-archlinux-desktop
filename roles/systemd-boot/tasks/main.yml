@@ -1,8 +1,7 @@
 ---
-- name: install intel microcode
+- name: install required firmware
   pacman:
-    name: intel-ucode
-    state: latest
+    name: "{{ systemd_boot.packages }}"
     update_cache: true
   when: "'GenuineIntel' in ansible_processor"
   tags: systemd-boot
@@ -11,7 +10,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-  with_items: "{{ systemd_boot_efi_files }}"
+  with_items: "{{ systemd_boot.files }}"
   tags: systemd-boot
 
 - name: setup systemd-boot menu

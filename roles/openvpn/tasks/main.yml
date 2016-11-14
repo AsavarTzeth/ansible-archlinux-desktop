@@ -3,12 +3,5 @@
   pacman:
     name: openvpn
     update_cache: true
-    state: present
-  tags: openvpn
-
-- name: install networkmanager-openvpn
-  pacman:
-    name: networkmanager-openvpn
-    update_cache: true
-    state: present
+  with_items: "{{ openvpn.packages }}"
   tags: openvpn

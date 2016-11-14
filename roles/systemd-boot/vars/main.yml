@@ -1,6 +1,9 @@
 ---
-systemd_boot_efi_files:
-  - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-    dest: /boot/efi/systemd/systemd-bootx64.efi
-  - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-    dest: /boot/efi/BOOT/BOOTX64.EFI
+systemd_boot:
+  packages:
+    - intel-ucode
+  files:
+    - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+      dest: /boot/efi/systemd/systemd-bootx64.efi
+    - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+      dest: /boot/efi/BOOT/BOOTX64.EFI

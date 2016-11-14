@@ -1,0 +1,4 @@
+openvpn:
+  packages:
+    - openvpn
+    - networkmanager-openvpn

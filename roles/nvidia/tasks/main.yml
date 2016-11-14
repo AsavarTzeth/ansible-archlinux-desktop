@@ -9,7 +9,6 @@
   pacman:
     name: nvidia
     update_cache: true
-    state: present
   when: graphics.stdout.find('NVIDIA') != -1
   tags: display-drivers
 
@@ -17,7 +16,6 @@
   pacman:
     name: lib32-nvidia-libgl
     update_cache: true
-    state: present
   when:
     - graphics.stdout.find('NVIDIA') != -1
     - ansible_architecture == "x86_64"
