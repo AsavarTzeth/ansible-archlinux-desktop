@@ -1,0 +1,72 @@
+---
+- name: install yubikey dependencies
+  pacman:
+    name: "{{ item }}"
+    update_cache: true
+  with_items: "{{ yubikey.packages }}"
+  tags: yubikey
+
+- name: setup skel dirs
+  file:
+    path: "/etc/skel/{{ item.dir }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items: "{{ yubikey.directories }}"
+  tags: yubikey
+
+- name: setup skel config
+  copy:
+    src: "{{ item.file }}"
+    dest: "/etc/skel/{{ item.file }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ yubikey.files }}"
+  tags: yubikey
+
+- name: setup user dirs
+  file:
+    path: "/home/{{ item[0].username }}/{{ item[1].dir }}"
+    owner: "{{ item[0].username }}"
+    group: "{{ item[0].username }}"
+    mode: "{{ item[1].mode }}"
+    state: directory
+  with_nested:
+    - "{{ users }}"
+    - "{{ yubikey.directories }}"
+  tags: yubikey
+
+- name: setup user config
+  copy:
+    src: "{{ item[1].file }}"
+    dest: "/home/{{ item[0].username }}/{{ item[1].file }}"
+    owner: "{{ item[0].username }}"
+    group: "{{ item[0].username }}"
+    mode: "{{ item[1].mode }}"
+  with_nested:
+    - "{{ users }}"
+    - "{{ yubikey.files }}"
+  tags: yubikey
+
+- name: setup ssh pkcs11 provider
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    line: PKCS11Provider /usr/lib/opensc-pkcs11.so
+  tags: yubikey
+
+- name: start pcscd.socket
+  service:
+    name: pcscd.socket
+    state: started
+    enabled: true
+  tags: yubikey
+
+- name: enable user gpg-agent.service
+  file:
+    src: "/home/{{ item[0].username }}/{{ item[1].target }}"
+    path: "/home/{{ item[0].username }}/{{ item[1].link }}"
+    owner: "{{ item[0].username }}"
+    group: "{{ item[0].username }}"
+    state: link
+  with_nested:
+    - "{{ users }}"
+    - "{{ yubikey.links }}"
+  tags: yubikey

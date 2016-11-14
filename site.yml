@@ -20,4 +20,5 @@
     - nvidia
     - vulkan
     - gnome
+    - yubikey
     - openvpn
