@@ -13,9 +13,11 @@
 
 # Users & Groups
 #users_default_shell: /bin/bash
+#users_create_primary_group: true
 #users:
 #  - username:
 #    name: user1
+#    primary_group: user1
 #    groups: ['group1','group2']
 #    shell: /bin/sh
 #    passwd: a-plain-text-password
