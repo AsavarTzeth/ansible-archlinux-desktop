@@ -25,25 +25,23 @@
 - name: setup user dirs
   file:
     path: "/home/{{ item[0].username }}/{{ item[1].dir }}"
-    owner: "{{ item[0].username }}"
-    group: "{{ item[0].username }}"
     mode: "{{ item[1].mode }}"
     state: directory
   with_nested:
     - "{{ users }}"
     - "{{ yubikey.directories }}"
+  become_user: "{{ item[0].username }}"
   tags: yubikey
 
 - name: setup user config
   copy:
     src: "{{ item[1].file }}"
     dest: "/home/{{ item[0].username }}/{{ item[1].file }}"
-    owner: "{{ item[0].username }}"
-    group: "{{ item[0].username }}"
     mode: "{{ item[1].mode }}"
   with_nested:
     - "{{ users }}"
     - "{{ yubikey.files }}"
+  become_user: "{{ item[0].username }}"
   tags: yubikey
 
 - name: setup ssh pkcs11 provider
