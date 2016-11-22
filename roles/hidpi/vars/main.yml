@@ -1,0 +1,7 @@
+---
+hidpi_stat_files:
+  - /usr/share/applications/spotify.desktop
+  - /usr/share/applications/steam.desktop
+hidpi_directories:
+  - .local/share/applications
+  - .local/share/Steam/skins

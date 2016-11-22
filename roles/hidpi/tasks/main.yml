@@ -8,18 +8,26 @@
   when: hidpi.enabled
   tags: hidpi
 
-- name: check if spotify exists
-  stat: path=/usr/share/applications/spotify.desktop
-  register: spotify
+- name: check if app exists
+  stat: path={{ item }}
+  register: apps
+  with_items: "{{ hidpi_stat_files }}"
   tags: hidpi
 
 - name: set spotify scale factor
   copy:
     src: spotify.desktop
-    dest: "/home/{{ item }}/.local/share/applications/spotify.desktop"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: 0644
+    dest: "/home/{{ item }}/.local/share/applications/"
   with_items: "{{ hidpi.users }}"
-  when: spotify.stat.exists
+  become_user: "{{ item }}"
+  when: apps.results[0].stat.exists
+  tags: hidpi
+
+- name: install steam hidpi skin
+  git:
+    repo: https://github.com/MoriTanosuke/HiDPI-Steam-Skin.git
+    dest: "/home/{{ item }}/.local/share/Steam/skins/HiDPI-Steam-Skin"
+  with_items: "{{ hidpi.users }}"
+  become_user: "{{ item }}"
+  when: apps.results[1].stat.exists
   tags: hidpi
