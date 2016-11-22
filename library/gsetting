@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
-# This is a slightly modified version of the gsetting ansible module,
-# originaly authored by Jiří Stránský (jistr on GitHub).
-#
-# See full changes made here: https://github.com/AsavarTzeth/ansible-gsetting
+"""
+This is a slightly modified version of the gsetting ansible module,
+originaly authored by Jiří Stránský (jistr on GitHub).
+
+See full changes made here: https://github.com/AsavarTzeth/ansible-gsetting
+"""
 
 import json
 import re
