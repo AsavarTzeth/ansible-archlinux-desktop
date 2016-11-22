@@ -4,7 +4,9 @@
     user: "{{ item }}"
     key: org.gnome.desktop.interface.scaling-factor
     value: 'uint32 2'
-  with_items: "{{ hidpi.users }}"
+  with_items:
+    - "{{ hidpi.users }}"
+    - gdm
   when: hidpi.enabled
   tags: hidpi
 
