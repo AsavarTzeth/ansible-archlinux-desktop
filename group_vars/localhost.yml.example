@@ -54,3 +54,8 @@
 #hidpi:
 #  enabled: true
 #  users: ['user1','user2']
+
+# Yubikey
+#yubikey:
+#  enabled: true
+#  users: ['user1','user2']

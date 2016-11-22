@@ -1,32 +1,31 @@
 ---
-yubikey:
-  packages:
-    - gnupg
-    - openssh
-    - opensc
-    - ccid
-    - libusb-compat
-    - libu2f-host
-  files:
-    - file: .pam_environment
-      mode: 644
-    - file: .gnupg/gpg-agent.conf
-      mode: 600
-    - file: .gnupg/scdaemon.conf
-      mode: 600
-    - file: .config/autostart/gnome-keyring-ssh.desktop
-      mode: 644
-    - file: .local/share/systemd/user/gpg-agent.service
-      mode: 644
-  directories:
-    - dir: .gnupg
-      mode: 700
-    - dir: .local/share/systemd/user
-      mode: 755
-    - dir: .config/autostart
-      mode: 755
-    - dir: .config/systemd/user/default.target.wants
-      mode: 755
-  links:
-    - target: .local/share/systemd/user/gpg-agent.service
-      link: .config/systemd/user/default.target.wants/gpg-agent.service
+yubikey_packages:
+ - gnupg
+ - openssh
+ - opensc
+ - ccid
+ - libusb-compat
+ - libu2f-host
+yubikey_files:
+ - file: .pam_environment
+   mode: 644
+ - file: .gnupg/gpg-agent.conf
+   mode: 600
+ - file: .gnupg/scdaemon.conf
+   mode: 600
+ - file: .config/autostart/gnome-keyring-ssh.desktop
+   mode: 644
+ - file: .local/share/systemd/user/gpg-agent.service
+   mode: 644
+yubikey_directories:
+ - dir: .gnupg
+   mode: 700
+ - dir: .local/share/systemd/user
+   mode: 755
+ - dir: .config/autostart
+   mode: 755
+ - dir: .config/systemd/user/default.target.wants
+   mode: 755
+yubikey_links:
+ - target: .local/share/systemd/user/gpg-agent.service
+   link: .config/systemd/user/default.target.wants/gpg-agent.service
