@@ -36,3 +36,17 @@
 #packages:
 #  - vim
 #  - fish
+
+# Gnome Settings
+#gsettings:
+#  - schema: org.gnome.xxx
+#    key: some-key
+#    value: 'true'
+#    users: ['user1','user2']
+#gsettings_per_user:
+#  - user: user1
+#    settings:
+#      - schema: org.gnome.xxx
+#        key: some-key
+#        value: 'true'
+

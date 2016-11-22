@@ -1,0 +1,20 @@
+---
+- name: set gsettings for users
+  gsetting:
+    user: "{{ item.1 }}"
+    key: "{{ item.0.schema }}.{{ item.0.key }}"
+    value: "{{ item.0.value }}"
+  with_subelements:
+    - "{{ gsettings }}"
+    - users
+  tags: gsettings
+
+- name: set gsettings per user
+  gsetting:
+    user: "{{ item.0.user }}"
+    key: "{{ item.1.schema}}.{{ item.1.key }}"
+    value: "{{ item.1.value }}"
+  with_subelements:
+    - "{{ gsettings_per_user }}"
+    - settings
+  tags: gsettings
