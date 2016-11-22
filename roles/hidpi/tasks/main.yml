@@ -1,0 +1,25 @@
+---
+- name: set gnome scaling factor
+  gsetting:
+    user: "{{ item }}"
+    key: org.gnome.desktop.interface.scaling-factor
+    value: 'uint32 2'
+  with_items: "{{ hidpi.users }}"
+  when: hidpi.enabled
+  tags: hidpi
+
+- name: check if spotify exists
+  stat: path=/usr/share/applications/spotify.desktop
+  register: spotify
+  tags: hidpi
+
+- name: set spotify scale factor
+  copy:
+    src: spotify.desktop
+    dest: "/home/{{ item }}/.local/share/applications/spotify.desktop"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+  with_items: "{{ hidpi.users }}"
+  when: spotify.stat.exists
+  tags: hidpi

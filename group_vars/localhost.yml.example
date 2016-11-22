@@ -50,3 +50,7 @@
 #        key: some-key
 #        value: 'true'
 
+# HiDPI
+#hidpi:
+#  enabled: true
+#  users: ['user1','user2']
