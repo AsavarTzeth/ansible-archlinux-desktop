@@ -2,7 +2,7 @@
 
 """
 This is a slightly modified version of the gsetting ansible module,
-originaly authored by Jiří Stránský (jistr on GitHub).
+originaly authored by Jiri Stransky (jistr on GitHub).
 
 See full changes made here: https://github.com/AsavarTzeth/ansible-gsetting
 """
