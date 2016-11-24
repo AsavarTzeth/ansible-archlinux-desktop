@@ -1,9 +1,8 @@
 ---
 - name: install yubikey dependencies
   pacman:
-    name: "{{ item }}"
+    name: "{{ yubikey_packages }}"
     update_cache: true
-  with_items: "{{ yubikey_packages }}"
   when: yubikey.enabled
   tags: yubikey
 

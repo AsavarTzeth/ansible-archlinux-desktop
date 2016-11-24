@@ -1,7 +1,6 @@
 ---
 - name: install openvpn
   pacman:
-    name: openvpn
+    name: "{{ openvpn.packages }}"
     update_cache: true
-  with_items: "{{ openvpn.packages }}"
   tags: openvpn

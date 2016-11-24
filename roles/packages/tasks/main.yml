@@ -22,7 +22,6 @@
 
 - name: install user packages
   pacman:
-    name: "{{ item }}"
+    name: "{{ packages }}"
     update_cache: true
-  with_items: "{{ packages }}"
   tags: packages
