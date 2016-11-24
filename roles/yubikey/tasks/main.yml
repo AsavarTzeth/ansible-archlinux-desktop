@@ -58,7 +58,7 @@
 - name: start pcscd.socket
   service:
     name: pcscd.socket
-    state: started
+    state: "{{ omit if chroot_mode else 'started' }}"
     enabled: true
   when: yubikey.enabled
   tags: yubikey
