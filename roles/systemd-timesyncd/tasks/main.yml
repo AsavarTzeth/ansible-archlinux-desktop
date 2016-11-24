@@ -2,6 +2,6 @@
 - name: setup systemd-timesyncd
   service:
     name: systemd-timesyncd
-    state: started
+    state: "{{ omit if chroot_mode else 'started' }}"
     enabled: true
   tags: systemd-timesyncd,ntp

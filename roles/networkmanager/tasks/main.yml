@@ -8,6 +8,6 @@
 - name: start networkmanager
   service:
     name: NetworkManager
-    state: started
+    state: "{{ omit if chroot_mode else 'started' }}"
     enabled: true
   tags: networkmanager
