@@ -23,8 +23,8 @@
     - locale
     - network
     - root
-    - systemd-boot
     - reflector
+    - systemd-boot
     - users
     - sudo
     - systemd-timesyncd
