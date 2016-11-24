@@ -1,9 +1,16 @@
 ---
+- name: verify boot mode
+  stat: path=/sys/firmware/efi/efivars
+  register: efivars
+  tags: systemd-boot
+
 - name: install required firmware
   pacman:
     name: "{{ systemd_boot.packages }}"
     update_cache: true
-  when: "'GenuineIntel' in ansible_processor"
+  when:
+    - "'GenuineIntel' in ansible_processor"
+    - efivars.stat.exists
   tags: systemd-boot
 
 - name: setup systemd-boot esp
@@ -11,22 +18,26 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items: "{{ systemd_boot.files }}"
+  when: efivars.stat.exists
   tags: systemd-boot
 
 - name: setup systemd-boot menu
   template:
     src: loader.conf.j2
     dest: /boot/loader/loader.conf
+  when: efivars.stat.exists
   tags: systemd-boot
 
 - name: register root device
   shell: 'cat /etc/fstab | egrep "\s/\s" | cut -d" " -f1'
   register: root_uuid
   changed_when: false
+  when: efivars.stat.exists
   tags: systemd-boot
 
 - name: setup systemd-boot entries
   template:
     src: "entries/arch.conf.j2"
     dest: "/boot/loader/entries/arch.conf"
+  when: efivars.stat.exists
   tags: systemd-boot
