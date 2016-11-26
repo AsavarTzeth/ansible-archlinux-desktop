@@ -12,11 +12,19 @@
       tags: always
 
     - name: set chroot_mode
-      set_fact: chroot_mode="{{ true if chroot.stdout == 'true' else false }}"
+      set_fact: chroot_mode={{ true if chroot.stdout == 'true' else false }}
       tags: always
 
-    - debug: msg="chroot mode is {{ chroot_mode }}" verbosity=1
-      tags: always
+    - name: verify boot mode
+      stat: path=/sys/firmware/efi/efivars
+      register: efi
+      when: boot_manager is undefined
+      tags: grub,systemd-boot
+
+    - name: set boot_manager
+      set_fact: boot_manager={{ 'systemd-boot' if efi.stat.exists else 'grub' }}
+      when: boot_manager is undefined
+      tags: grub,systemd-boot
 
   roles:
     - time-zone
@@ -24,7 +32,8 @@
     - network
     - root
     - reflector
-    - systemd-boot
+    - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
+    - { role: grub, when: boot_manager == 'grub' }
     - users
     - sudo
     - systemd-timesyncd
