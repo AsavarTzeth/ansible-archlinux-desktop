@@ -1,0 +1,3 @@
+[submodule "roles/grub"]
+	path = roles/grub
+	url = git@github.com:AsavarTzeth/ansible-grub.git
