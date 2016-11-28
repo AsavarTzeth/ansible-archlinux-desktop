@@ -48,7 +48,7 @@
     - users
     - sudo
     - systemd-timesyncd
-    - packages
+    - pacman
     - networkmanager
     - pulseaudio
     - xorg
