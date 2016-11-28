@@ -26,6 +26,17 @@
       when: boot_manager is undefined
       tags: grub,systemd-boot
 
+    - name: find graphics hardware
+      shell: lspci | grep -e VGA -e 3D
+      register: graphics
+      changed_when: false
+      tags: nvidia
+
+    - name: set gpu drivers to install
+      set_fact: nvidia={{ true if graphics.stdout.find('NVIDIA') != -1 }}
+      when: nvidia is undefined
+      tags: nvidia
+
   roles:
     - time-zone
     - locale
@@ -41,7 +52,7 @@
     - networkmanager
     - pulseaudio
     - xorg
-    - nvidia
+    - { role: nvidia, when: nvidia }
     - vulkan
     - gnome
     - yubikey
