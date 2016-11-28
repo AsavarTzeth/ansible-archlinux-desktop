@@ -11,3 +11,9 @@
     update_cache: true
   when: ansible_architecture == "x86_64"
   tags: nvidia
+
+- name: enable rootless xorg
+  copy:
+    src: Xwrapper.config
+    dest: /etc/X11
+  tags: nvidia
