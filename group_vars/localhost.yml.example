@@ -32,6 +32,12 @@
 #sudo_group_gid: 10
 #sudo_group_string: ALL=(ALL) ALL
 
+# Reflector
+#reflector_countries:
+#  - Sweden
+#  - Denmark
+#  - Norway
+
 # Packages
 #packages:
 #  - vim

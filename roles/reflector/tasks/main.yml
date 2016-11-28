@@ -28,7 +28,7 @@
 
 - name: run reflector
   command: '/usr/bin/reflector -p https -l 50 -n 5 --sort rate
-           --country Sweden --country Denmark --country Norway
+           {% for o in reflector_countries %}--country {{ o }} {% endfor %}
            --save /etc/pacman.d/mirrorlist'
   when: chroot_mode
   tags: reflector
