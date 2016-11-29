@@ -1,2 +1,4 @@
+#{{ ansible_managed }}
+
 [multilib]
 Include = /etc/pacman.d/mirrorlist

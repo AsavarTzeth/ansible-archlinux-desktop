@@ -1,3 +1,5 @@
+#{{ ansible_managed }}
+
 {% if sudo_group is defined %}
 # Allow members of group {{ sudo_group }} to execute any command
 %{{ sudo_group }} {{ sudo_group_string }}
