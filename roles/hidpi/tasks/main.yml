@@ -7,14 +7,12 @@
   with_items:
     - "{{ hidpi.users }}"
     - gdm
-  when: hidpi.enabled
   tags: hidpi
 
 - name: check if app exists
   stat: path={{ item }}
   register: apps
   with_items: "{{ hidpi_stat_files }}"
-  when: hidpi.enabled
   tags: hidpi
 
 - name: set spotify scale factor

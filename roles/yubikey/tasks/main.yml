@@ -3,7 +3,6 @@
   pacman:
     name: "{{ yubikey_packages }}"
     update_cache: true
-  when: yubikey.enabled
   tags: yubikey
 
 - name: setup skel dirs
@@ -12,7 +11,6 @@
     mode: "{{ item.mode }}"
     state: directory
   with_items: "{{ yubikey_directories }}"
-  when: yubikey.enabled
   tags: yubikey
 
 - name: setup skel config
@@ -21,7 +19,6 @@
     dest: "/etc/skel/{{ item.file }}"
     mode: "{{ item.mode }}"
   with_items: "{{ yubikey_files }}"
-  when: yubikey.enabled
   tags: yubikey
 
 - name: setup user dirs
@@ -33,7 +30,6 @@
     - "{{ yubikey.users }}"
     - "{{ yubikey_directories }}"
   become_user: "{{ item[0] }}"
-  when: yubikey.enabled
   tags: yubikey
 
 - name: setup user config
@@ -45,14 +41,12 @@
     - "{{ yubikey.users }}"
     - "{{ yubikey_files }}"
   become_user: "{{ item[0] }}"
-  when: yubikey.enabled
   tags: yubikey
 
 - name: setup ssh pkcs11 provider
   lineinfile:
     dest: /etc/ssh/ssh_config
     line: PKCS11Provider /usr/lib/opensc-pkcs11.so
-  when: yubikey.enabled
   tags: yubikey
 
 - name: start pcscd.socket
@@ -60,7 +54,6 @@
     name: pcscd.socket
     state: "{{ omit if chroot_mode else 'started' }}"
     enabled: true
-  when: yubikey.enabled
   tags: yubikey
 
 - name: enable user gpg-agent.service
@@ -72,5 +65,4 @@
     - "{{ yubikey.users }}"
     - "{{ yubikey_links }}"
   become_user: "{{ item[0] }}"
-  when: yubikey.enabled
   tags: yubikey

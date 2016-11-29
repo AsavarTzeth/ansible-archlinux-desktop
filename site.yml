@@ -55,7 +55,7 @@
     - { role: nvidia, when: nvidia }
     - vulkan
     - gnome
-    - yubikey
+    - { role: yubikey, when: yubikey.enabled }
     - openvpn
     - gsettings
-    - hidpi
+    - { role: hidpi, when: hidpi.enabled }
