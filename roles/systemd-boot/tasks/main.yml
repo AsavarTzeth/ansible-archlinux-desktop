@@ -6,11 +6,17 @@
   when: "'GenuineIntel' in ansible_processor"
   tags: systemd-boot
 
-- name: setup systemd-boot esp
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items: "{{ systemd_boot.files }}"
+- name: check boot entries
+  command: bootctl status
+  register: boot_entries
+  changed_when: false
+  tags: systemd-boot
+
+- name: create systemd-boot efi entry
+  command: bootctl --path=/boot install
+  register: result
+  failed_when: result.rc >= 2
+  when: boot_entries.stdout.find('Linux Boot Manager') == -1
   tags: systemd-boot
 
 - name: setup systemd-boot menu
