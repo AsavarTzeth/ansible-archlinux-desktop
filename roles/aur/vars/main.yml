@@ -1,0 +1,3 @@
+---
+aur_build_user: ansible-aur
+aur_work_dir: /tmp/ansible-aur

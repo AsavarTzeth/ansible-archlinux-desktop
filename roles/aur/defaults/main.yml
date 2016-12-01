@@ -1,0 +1,5 @@
+---
+aur:
+  enabled: true
+
+aur_package_name: yaourt
