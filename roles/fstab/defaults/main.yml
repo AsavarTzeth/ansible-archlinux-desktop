@@ -1,0 +1,18 @@
+---
+fstab:
+  enabled: true
+
+fstab_entries:
+  - name: /tmp
+    src: tmpfs
+    fstype: tmpfs
+    opts: nodev,nosuid,noexec,noatime
+  - name: /dev/shm
+    src: tmpfs
+    fstype: tmpfs
+    opts: nodev,nosuid,noexec,noatime
+  - name: /sys/firmware/efi/efivars
+    src: efivarfs
+    fstype: efivarfs
+    opts: ro,nodev,nosuid,noexec,noatime
+    when: efivars.stat.exists

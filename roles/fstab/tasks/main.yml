@@ -1,0 +1,32 @@
+---
+- name: verify boot mode
+  stat: path=/sys/firmware/efi/efivars
+  register: efivars
+  tags: fstab
+
+- name: secure some mounts
+  mount:
+    name: "{{ item.name }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts }}"
+    state: mounted
+  when: "{{ item.when | default (true) }}"
+  with_items: "{{ fstab_entries }}"
+  tags: fstab
+
+- name: columnate /etc/fstab
+  shell: sed 's/#.*//' /etc/fstab | column -t > /etc/fstab.new
+  changed_when: lookup('file','/etc/fstab.new') != lookup('file','/etc/fstab')
+  args:
+    warn: false
+  tags: fstab
+
+- name: validate & write to /etc/fstab
+  copy:
+    src: /etc/fstab.new
+    dest: /etc/fstab
+    backup: true
+    remote_src: true
+    validate: mount -a -T %s
+  tags: fstab
