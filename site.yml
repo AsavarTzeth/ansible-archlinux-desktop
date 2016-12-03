@@ -42,7 +42,7 @@
     - locale
     - network
     - root
-    - { role: fstab, when: fstab.enabled }
+    - { role: fstab, when: fstab.enabled | default(true) }
     - reflector
     - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
     - { role: grub, when: boot_manager == 'grub' }
@@ -55,7 +55,7 @@
     - { role: nvidia, when: nvidia }
     - vulkan
     - gnome
-    - { role: yubikey, when: yubikey.enabled }
+    - { role: yubikey, when: yubikey.enabled | default(false) }
     - openvpn
     - pacman
     # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
@@ -67,4 +67,4 @@
         - aur.enabled | default(false)
       tags: aur
     - gsettings
-    - { role: hidpi, when: hidpi.enabled }
+    - { role: hidpi, when: hidpi.enabled | default(false) }

@@ -67,10 +67,10 @@
 
 # HiDPI
 #hidpi:
-#  enabled: true
+#  enabled: false
 #  users: ['user1','user2']
 
 # Yubikey
 #yubikey:
-#  enabled: true
+#  enabled: false
 #  users: ['user1','user2']
