@@ -1,71 +1,35 @@
 ---
-- name: add ansible-aur user
-  user:
-    name: ansible-aur
-    home: /
-    shell: /bin/sh
-    createhome: false
-    system: true
-  register: id
-  tags: aur
-
 - name: add temporary mount point
   file:
     path: "{{ aur_work_dir }}"
-    mode: 0700
+    mode: 0755
     state: directory
-  tags: aur
 
 - command: mountpoint -q "{{ aur_work_dir }}"
   register: aur_tmp_mount
   failed_when: false
   changed_when: false
-  tags: aur
 
 - name: mount temporary tmpfs
   command: >
-    mount -t tmpfs -o nodev,nosuid,exec,noatime,uid={{ id.uid }},mode=0700
+    mount -t tmpfs -o
+    nodev,nosuid,exec,noatime,uid={{ ansible_env.SUDO_UID }},mode=0755
     tmpfs {{ aur_work_dir }}
   args:
     warn: false
   when: aur_tmp_mount.rc != 0
-  tags: aur
 
-- name: install git
+- name: install dependencies
   pacman:
-    name: git
+    name: base-devel
     update_cache: true
-  tags: aur
 
-- name: clone aur repo
-  git:
-    repo: "https://aur.archlinux.org/{{ aur_package_name }}.git"
-    dest: "{{ aur_work_dir }}/{{ aur_package_name }}"
-  become_user: "{{ aur_build_user }}"
-  register: aur_clone_result
-  tags: aur
-
-- name: build package
-  command: makepkg -fs --noconfirm --noprogressbar
-  args:
-    chdir: "{{ aur_work_dir }}/{{ aur_package_name }}"
-  become_user: "{{ aur_build_user }}"
-  when: aur_clone_result | changed
-  register: aur_makepkg_result
-  tags: aur
-
-- shell: ls -1 | grep pkg.tar
-  args:
-    chdir: "{{ aur_work_dir }}/{{ aur_package_name }}"
-  when: aur_makepkg_result | changed
-  register: aur_compiled_package_name
-  tags: aur
-
-- name: install packages
-  command: >
-    pacman -U --noconfirm --noprogressbar --needed
-    {{ aur_compiled_package_name.stdout }}
-  args:
-    chdir: "{{ aur_work_dir }}/{{ aur_package_name }}"
-  when: aur_makepkg_result | changed
-  tags: aur
+- name: install aur packages
+  makepkg:
+    name: "{{ item.pkg | default('') }}"
+    state: present
+    as_deps: "{{ true if item.dep is defined else false }}"
+    build_dir: "{{ aur_work_dir }}"
+  with_items:
+    - "{{ aur_default_install if aur_default_install != false else omit }}"
+    - "{{ aur.install | mandatory }}"

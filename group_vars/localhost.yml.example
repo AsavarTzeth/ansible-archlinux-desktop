@@ -43,6 +43,15 @@
 #  - vim
 #  - fish
 
+#aur:
+#  enabled: false
+#  install:
+#    - pkg: spotify
+#    - pkg: zfs-dkms
+#      dep: false
+#    - pkg: spl-dkms
+#      dep: true
+
 # Gnome Settings
 #gsettings:
 #  - schema: org.gnome.xxx

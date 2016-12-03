@@ -49,7 +49,6 @@
     - users
     - sudo
     - systemd-timesyncd
-    - pacman
     - networkmanager
     - pulseaudio
     - xorg
@@ -58,5 +57,14 @@
     - gnome
     - { role: yubikey, when: yubikey.enabled }
     - openvpn
+    - pacman
+    # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
+    # this breaks when the true ansible_user is root (when running live install)
+    - role: aur
+      when:
+        - ansible_env.SUDO_USER is defined
+        - ansible_env.SUDO_USER != 'root'
+        - aur.enabled | default(false)
+      tags: aur
     - gsettings
     - { role: hidpi, when: hidpi.enabled }
