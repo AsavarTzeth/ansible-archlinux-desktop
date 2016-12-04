@@ -3,5 +3,5 @@
 	url = https://github.com/AsavarTzeth/ansible-grub.git
 [submodule "roles/aur/library"]
 	path = roles/aur/library
-	url = git@github.com:AsavarTzeth/ansible-makepkg.git
+	url = https://github.com/AsavarTzeth/ansible-makepkg.git
 	branch = urlunsplit_fix
