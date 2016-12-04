@@ -28,8 +28,11 @@
   makepkg:
     name: "{{ item.pkg | default('') }}"
     state: present
-    as_deps: "{{ true if item.dep is defined else false }}"
+    as_deps: "{{ item.dep | default(false) }}"
     build_dir: "{{ aur_work_dir }}"
-  with_items:
-    - "{{ aur_default_install if aur_default_install != false else omit }}"
-    - "{{ aur.install | mandatory }}"
+  with_items: "{{ aur.install | default(aur_default_install) }}"
+
+- name: cleanup mountpoint
+  command: umount "{{ aur_work_dir }}"
+  args:
+    warn: false

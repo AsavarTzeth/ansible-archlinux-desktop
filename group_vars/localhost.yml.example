@@ -46,11 +46,9 @@
 #aur:
 #  enabled: false
 #  install:
-#    - pkg: spotify
-#    - pkg: zfs-dkms
-#      dep: false
-#    - pkg: spl-dkms
+#    - pkg: package-query
 #      dep: true
+#    - pkg: yaourt
 
 # Gnome Settings
 #gsettings:
