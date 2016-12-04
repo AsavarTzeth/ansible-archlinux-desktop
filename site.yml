@@ -33,7 +33,8 @@
       tags: nvidia
 
     - name: set gpu drivers to install
-      set_fact: nvidia={{ true if graphics.stdout.find('NVIDIA') != -1 }}
+      set_fact: >
+        nvidia={{ true if graphics.stdout.find('NVIDIA') != -1 else false }}
       when: nvidia is undefined
       tags: nvidia
 
