@@ -48,7 +48,7 @@
     - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
     - { role: grub, when: boot_manager == 'grub' }
     - users
-    - sudo
+    - { role: sudo, when: sudo_enabled }
     - systemd-timesyncd
     - networkmanager
     - pulseaudio

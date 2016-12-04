@@ -28,6 +28,7 @@
 #      - "ssh-rsa AAAAB.... bar@machine"
 
 # Sudo
+#sudo_enabled: true
 #sudo_group: wheel
 #sudo_group_gid: 10
 #sudo_group_string: ALL=(ALL) ALL
