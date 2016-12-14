@@ -16,7 +16,7 @@
   tags: hidpi
 
 - name: set spotify scale factor
-  copy:
+  template:
     src: spotify.desktop
     dest: "/home/{{ item }}/.local/share/applications/"
   with_items: "{{ hidpi.users }}"

@@ -1,4 +1,7 @@
 ---
+# Unquoted variables used with mode in the template module will for some reason
+# translate to incorrect permissions. Example: 0644 becomes 420
+
 yubikey_packages:
  - gnupg
  - openssh
@@ -6,26 +9,29 @@ yubikey_packages:
  - ccid
  - libusb-compat
  - libu2f-host
+
 yubikey_files:
  - file: .pam_environment
-   mode: 644
+   mode: '0644'
  - file: .gnupg/gpg-agent.conf
-   mode: 600
+   mode: '0600'
  - file: .gnupg/scdaemon.conf
-   mode: 600
+   mode: '0600'
  - file: .config/autostart/gnome-keyring-ssh.desktop
-   mode: 644
+   mode: '0644'
  - file: .local/share/systemd/user/gpg-agent.service
-   mode: 644
-yubikey_directories:
+   mode: '0644'
+
+yubikey_dirs:
  - dir: .gnupg
-   mode: 700
+   mode: '0700'
  - dir: .local/share/systemd/user
-   mode: 755
+   mode: '0755'
  - dir: .config/autostart
-   mode: 755
+   mode: '0755'
  - dir: .config/systemd/user/default.target.wants
-   mode: 755
+   mode: '0755'
+
 yubikey_links:
  - target: .local/share/systemd/user/gpg-agent.service
    link: .config/systemd/user/default.target.wants/gpg-agent.service

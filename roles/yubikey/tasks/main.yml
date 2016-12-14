@@ -10,11 +10,11 @@
     path: "/etc/skel/{{ item.dir }}"
     mode: "{{ item.mode }}"
     state: directory
-  with_items: "{{ yubikey_directories }}"
+  with_items: "{{ yubikey_dirs }}"
   tags: yubikey
 
 - name: setup skel config
-  copy:
+  template:
     src: "{{ item.file }}"
     dest: "/etc/skel/{{ item.file }}"
     mode: "{{ item.mode }}"
@@ -28,12 +28,12 @@
     state: directory
   with_nested:
     - "{{ yubikey.users }}"
-    - "{{ yubikey_directories }}"
+    - "{{ yubikey_dirs }}"
   become_user: "{{ item[0] }}"
   tags: yubikey
 
 - name: setup user config
-  copy:
+  template:
     src: "{{ item[1].file }}"
     dest: "/home/{{ item[0] }}/{{ item[1].file }}"
     mode: "{{ item[1].mode }}"
