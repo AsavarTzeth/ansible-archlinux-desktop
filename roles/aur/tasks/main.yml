@@ -17,6 +17,7 @@
     tmpfs {{ aur_work_dir }}
   args:
     warn: false
+  changed_when: false
   when: aur_tmp_mount.rc != 0
 
 - name: install dependencies
@@ -36,3 +37,4 @@
   command: umount "{{ aur_work_dir }}"
   args:
     warn: false
+  changed_when: false
