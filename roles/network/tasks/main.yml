@@ -1,12 +1,10 @@
 ---
+- name: setup hostname
+  hostname: name={{ arch_hostname }}
+  tags: network
+
 - name: setup hosts file
   template:
     src: hosts.j2
     dest: /etc/hosts
-  tags: network
-
-- name: setup hostname
-  template:
-    src: hostname.j2
-    dest: /etc/hostname
   tags: network
