@@ -1,9 +1,18 @@
 ---
-systemd_boot:
-  packages:
-    - intel-ucode
-  files:
-    - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-      dest: /boot/efi/systemd/systemd-bootx64.efi
-    - src: /usr/lib/systemd/boot/efi/systemd-bootx64.efi
-      dest: /boot/efi/BOOT/BOOTX64.EFI
+# Unquoted variables used with mode in the template module will for some reason
+# translate to incorrect permissions. Example: 0644 becomes 420
+
+systemd_boot_files:
+  - src: loader.conf.j2
+    dest: /boot/loader/loader.conf
+    mode: '0644'
+  - src: entries/arch.conf.j2
+    dest: /boot/loader/entries/arch.conf
+    mode: '0644'
+  - src: systemd-boot.hook.j2
+    dest: /etc/pacman.d/hooks/systemd-boot.hook
+    mode: '0644'
+
+systemd_boot_dirs:
+  - dir: /etc/pacman.d/hooks
+    mode: '0755'

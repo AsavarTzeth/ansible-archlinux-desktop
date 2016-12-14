@@ -1,38 +1,60 @@
 ---
-- name: install required firmware
+- name: enable intel microcode updates
   pacman:
-    name: "{{ systemd_boot.packages }}"
+    name: intel-ucode
     update_cache: true
   when: "'GenuineIntel' in ansible_processor"
   tags: systemd-boot
 
-- name: check boot entries
-  command: bootctl status
-  register: boot_entries
-  changed_when: false
-  tags: systemd-boot
-
-- name: create systemd-boot efi entry
-  command: bootctl --path=/boot install
-  register: result
-  failed_when: result.rc >= 2
-  when: boot_entries.stdout.find('Linux Boot Manager') == -1
-  tags: systemd-boot
-
-- name: setup systemd-boot menu
-  template:
-    src: loader.conf.j2
-    dest: /boot/loader/loader.conf
-  tags: systemd-boot
-
 - name: register root device
   shell: 'cat /etc/fstab | egrep "\s/\s" | cut -d" " -f1'
-  register: root_uuid
+  register: root_device
   changed_when: false
   tags: systemd-boot
 
-- name: setup systemd-boot entries
+- name: check install state
+  command: bootctl status
+  register: install_state
+  changed_when: false
+  tags: systemd-boot 
+
+# This is not perfect, because efivars contains data from old installations,
+# that might point to the wrong ESP or even a non-existing partition.
+
+- name: remount efivars read-write
+  command: mount -t efivarfs -o remount,rw /sys/firmware/efi/efivars
+  args:
+    warn: false
+  when: install_state.stdout.find('Linux Boot Manager') == -1
+  register: efivarfs_mount
+  tags: systemd-boot
+
+- name: install systemd-boot to esp
+  command: "bootctl --path={{ systemd_boot_esp }} install"
+  register: install_result
+  failed_when: install_result.rc >= 2
+  when: efivarfs_mount | changed
+  tags: systemd-boot
+
+- name: remount efivars read-only
+  command: mount -t efivarfs -o remount,ro /sys/firmware/efi/efivars
+  args:
+    warn: false
+  when: efivarfs_mount | changed
+  tags: systemd-boot
+
+- name: setup systemd-boot dirs
+  file:
+    dest: "{{ item.dir }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items: "{{ systemd_boot_dirs }}"
+  tags: systemd-boot
+
+- name: setup systemd-boot files
   template:
-    src: "entries/arch.conf.j2"
-    dest: "/boot/loader/entries/arch.conf"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ systemd_boot_files }}"
   tags: systemd-boot

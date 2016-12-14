@@ -6,4 +6,4 @@ linux   /vmlinuz-linux
 initrd  /intel-ucode.img
 {% endif %}
 initrd  /initramfs-linux.img
-options root={{ root_uuid.stdout }} rw
+options root={{ root_device.stdout }} rw

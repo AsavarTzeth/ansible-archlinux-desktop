@@ -1,0 +1,11 @@
+#{{ ansible_managed }}
+
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
+
+[Action]
+Description = Updating systemd-boot on the EFI system partition...
+When = PostTransaction
+Exec = /usr/bin/bootctl --path={{ systemd_boot_esp }} update
