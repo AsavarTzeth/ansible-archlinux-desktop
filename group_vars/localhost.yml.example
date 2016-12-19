@@ -51,6 +51,13 @@
 #      dep: true
 #    - pkg: yaourt
 
+# Gnome Shell Extensions
+#gnome_shell_extensions:
+#  - id: 1010
+#    state: present
+#    enabled: true
+#    users: ['user1','user2']
+
 # Gnome Settings
 #gsettings:
 #  - schema: org.gnome.xxx

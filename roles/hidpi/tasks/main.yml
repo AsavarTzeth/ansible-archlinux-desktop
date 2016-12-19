@@ -1,9 +1,9 @@
 ---
 - name: set gnome scaling factor
   gsetting:
-    user: "{{ item }}"
     key: org.gnome.desktop.interface.scaling-factor
     value: 'uint32 2'
+  become_user: "{{ item }}"
   with_items:
     - "{{ hidpi.users }}"
     - gdm
@@ -19,8 +19,8 @@
   template:
     src: spotify.desktop
     dest: "/home/{{ item }}/.local/share/applications/"
-  with_items: "{{ hidpi.users }}"
   become_user: "{{ item }}"
+  with_items: "{{ hidpi.users }}"
   when: apps.results[0].stat.exists
   tags: hidpi
 
@@ -28,7 +28,7 @@
   git:
     repo: https://github.com/MoriTanosuke/HiDPI-Steam-Skin.git
     dest: "/home/{{ item }}/.local/share/Steam/skins/HiDPI-Steam-Skin"
-  with_items: "{{ hidpi.users }}"
   become_user: "{{ item }}"
+  with_items: "{{ hidpi.users }}"
   when: apps.results[1].stat.exists
   tags: hidpi
