@@ -1,0 +1,16 @@
+---
+mkinitcpio_modules: []
+
+mkinitcpio_binaries: []
+
+mkinitcpio_files: []
+
+mkinitcpio_hooks:
+  - base
+  - udev
+  - autodetect
+  - modconf
+  - block
+  - filesystems
+  - keyboard
+  - fsck

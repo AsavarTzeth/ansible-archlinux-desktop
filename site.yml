@@ -44,6 +44,7 @@
     - network
     - root
     - { role: fstab, when: fstab.enabled | default(true) }
+    - mkinitcpio
     - reflector
     - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
     - { role: grub, when: boot_manager == 'grub' }

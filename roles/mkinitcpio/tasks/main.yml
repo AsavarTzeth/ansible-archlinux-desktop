@@ -1,0 +1,14 @@
+---
+- name: crc32 filesystems
+  set_fact:
+    mkinitcpio_modules: ['crc32_generic', 'crc32-pclmul']
+  when: lookup('file', '/etc/fstab').find('f2fs') != -1
+  tags: mkinitcpio
+
+- name: setup mkinitcpio
+  template:
+    src: mkinitcpio.conf.j2
+    dest: /etc/mkinitcpio.conf
+    mode: 0644
+  notify: mkinitcpio
+  tags: mkinitcpio
