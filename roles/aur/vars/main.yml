@@ -1,2 +1,8 @@
 ---
 aur_work_dir: /tmp/ansible-aur
+
+yaourtrc_lines:
+  - key: TMPDIR=
+    value: '"$XDG_RUNTIME_DIR"'
+  - key: EXPORT=
+    value: 2

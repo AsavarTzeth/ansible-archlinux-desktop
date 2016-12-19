@@ -38,3 +38,18 @@
   args:
     warn: false
   changed_when: false
+
+# If yaourt is installed, make sure it works with /tmp mounted with
+# noexec mount option, among other things
+- name: check if yaourtrc exists
+  stat: path=/etc/yaourtrc
+  register: yaourtrc
+
+- name: setup yaourtrc
+  lineinfile:
+    dest: /etc/yaourtrc
+    line: "{{ item.key }}{{ item.value }}"
+    regexp: "^{{ item.key }}"
+    insertafter: "^#{{ item.key }}"
+  with_items: "{{ yaourtrc_lines }}"
+  when: yaourtrc.stat.exists
