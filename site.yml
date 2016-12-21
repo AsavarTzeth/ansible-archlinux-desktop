@@ -39,27 +39,30 @@
       tags: nvidia
 
   roles:
+    # Core-installation
     - time-zone
     - locale
     - network
     - root
     - { role: fstab, when: fstab.enabled | default(true) }
-    - mkinitcpio
     - reflector
     - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
     - { role: grub, when: boot_manager == 'grub' }
+    - mkinitcpio
+    # Post-installation
     - users
     - { role: sudo, when: sudo_enabled }
     - systemd-timesyncd
+    - pacman
     - networkmanager
     - pulseaudio
     - xorg
     - { role: nvidia, when: nvidia }
     - vulkan
     - gnome
+    # Desktop & user preferences
     - { role: yubikey, when: yubikey.enabled | default(false) }
     - openvpn
-    - pacman
     # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
     # this breaks when the true ansible_user is root (when running live install)
     - role: aur
