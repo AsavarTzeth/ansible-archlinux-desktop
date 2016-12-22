@@ -1,9 +1,16 @@
 ---
-- name: crc32 filesystems
+- name: setup crc32 modules
   set_fact:
     mkinitcpio_modules: ['crc32_generic', 'crc32-pclmul']
   when: lookup('file', '/etc/fstab').find('f2fs') != -1
   tags: mkinitcpio
+
+- name: setup disk encryption
+  set_fact:
+    mkinitcpio_hooks: "{{ mkinitcpio_hooks }} + ['lvm2', 'encrypt']"
+    mkinitcpio_files: "{{ mkinitcpio_files }} + ['/crypto_keyfile.bin']"
+  when: boot_encryption.enabled
+  tags: mkinitcpio,dm-crypt
 
 - name: setup mkinitcpio
   template:
@@ -11,4 +18,4 @@
     dest: /etc/mkinitcpio.conf
     mode: 0644
   notify: mkinitcpio
-  tags: mkinitcpio
+  tags: mkinitcpio,dm-crypt

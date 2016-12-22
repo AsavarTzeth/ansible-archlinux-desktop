@@ -19,12 +19,14 @@
       stat: path=/sys/firmware/efi/efivars
       register: efi
       when: boot_manager is undefined
-      tags: grub,systemd-boot
+      tags: grub,systemd-boot,mkinitcpio,dm-crypt
 
     - name: set boot_manager
-      set_fact: boot_manager={{ 'systemd-boot' if efi.stat.exists else 'grub' }}
+      set_fact:
+        boot_manager="{{ 'systemd-boot' if efi.stat.exists and
+        not boot_encryption.enabled | default(false) else 'grub' }}"
       when: boot_manager is undefined
-      tags: grub,systemd-boot
+      tags: grub,systemd-boot,mkinitcpio,dm-crypt
 
     - name: find graphics hardware
       shell: lspci | grep -e VGA -e 3D

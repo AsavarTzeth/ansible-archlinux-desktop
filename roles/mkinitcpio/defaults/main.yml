@@ -14,3 +14,6 @@ mkinitcpio_hooks:
   - filesystems
   - keyboard
   - fsck
+
+boot_encryption:
+  enabled: false

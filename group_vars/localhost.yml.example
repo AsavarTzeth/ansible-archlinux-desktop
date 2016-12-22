@@ -33,6 +33,13 @@
 #sudo_group_gid: 10
 #sudo_group_string: ALL=(ALL) ALL
 
+# Boot
+#boot_encryption:
+#  enabled: false
+#  cryptdevice: /dev/sdX#
+#  rootdevice: /dev/mapper/lvm-root
+#grub_boot_device: /dev/sdX
+
 # Reflector
 #reflector_countries:
 #  - Sweden
