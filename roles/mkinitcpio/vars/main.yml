@@ -1,0 +1,5 @@
+---
+mkinitcpio:
+  - filesystem: f2fs
+    modules: ['crc32_generic', 'crc32-pclmul']
+    utils: f2fs-tools

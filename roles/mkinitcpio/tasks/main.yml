@@ -1,9 +1,18 @@
 ---
-- name: setup crc32 modules
-  set_fact:
-    mkinitcpio_modules: ['crc32_generic', 'crc32-pclmul']
-  when: lookup('file', '/etc/fstab').find('f2fs') != -1
-  tags: mkinitcpio
+- block:
+  - name: setup filesystem modules
+    set_fact:
+      mkinitcpio_modules: "{{ mkinitcpio_modules }} + {{ item.modules }}"
+    with_items: "{{ mkinitcpio }}"
+
+  - name: install filesystem deps
+    pacman:
+      name: "{{ item.utils | default(omit) }}"
+      update_cache: true
+    with_items: "{{ mkinitcpio }}"
+
+  when: lookup('file', '/etc/fstab').find(item.filesystem) != -1
+  tags: mkinitcpio,fstab
 
 - name: setup disk encryption
   set_fact:
@@ -18,4 +27,4 @@
     dest: /etc/mkinitcpio.conf
     mode: 0644
   notify: mkinitcpio
-  tags: mkinitcpio,dm-crypt
+  tags: mkinitcpio,fstab,dm-crypt
