@@ -1,0 +1,4 @@
+#{{ ansible_managed }}
+
+{{ lookup('file',menu_tmp_path + '/' + item[0]) }}
+NoDisplay=true

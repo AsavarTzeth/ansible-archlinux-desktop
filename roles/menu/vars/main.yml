@@ -1,0 +1,24 @@
+---
+menu_preset:
+  - assistant.desktop
+  - assistant-qt4.desktop
+  - avahi-discover.desktop
+  - bssh.desktop
+  - bvnc.desktop
+  - CMake.desktop
+  - designer.desktop
+  - designer-qt4.desktop
+  - fluid.desktop
+  - gtk-lshw.desktop
+  - jconsole.desktop
+  - linguist.desktop
+  - linguist-qt4.desktop
+  - policytool.desktop
+  - qdbusviewer.desktop
+  - qdbusviewer-qt4.desktop
+  - qv4l2.desktop
+  - zenmap.desktop
+  - zenmap-root.desktop
+
+menu_file_path: /usr/share/applications/
+menu_tmp_path: "{{ lookup('env','XDG_RUNTIME_DIR') }}/ansible/menu"

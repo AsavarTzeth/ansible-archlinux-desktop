@@ -78,6 +78,14 @@
 #        key: some-key
 #        value: 'true'
 
+# Desktop
+#menu:
+#  enabled: false
+#  hide_items:
+#    preset: true
+#    custom: ['item1.desktop','item2.desktop']
+#    users: ['user1','user2']
+
 # HiDPI
 #hidpi:
 #  enabled: false

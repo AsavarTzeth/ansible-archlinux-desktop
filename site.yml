@@ -75,3 +75,4 @@
       tags: aur
     - gsettings
     - { role: hidpi, when: hidpi.enabled | default(false) }
+    - { role: menu, when: menu.enabled | default(false) }

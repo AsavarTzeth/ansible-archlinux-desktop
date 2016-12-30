@@ -1,0 +1,8 @@
+---
+menu:
+  enabled: false
+  hide_items:
+    preset: true
+
+menu_stat: []
+menu_files: []
