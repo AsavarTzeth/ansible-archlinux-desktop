@@ -11,6 +11,10 @@
 #   this unless you know what you are doing. Even once encrypted, you
 #   don't want to share your secrets unless you need to.
 
+# Locale
+#locale_lang: sv_SE.UTF-8
+#locale_vc_keymap: sv-latin1
+
 # Users & Groups
 #users_default_shell: /bin/bash
 #users_create_primary_group: true
