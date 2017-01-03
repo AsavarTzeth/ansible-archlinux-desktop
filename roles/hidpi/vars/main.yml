@@ -2,6 +2,8 @@
 hidpi_stat_files:
   - /usr/share/applications/spotify.desktop
   - /usr/share/applications/steam.desktop
-hidpi_directories:
-  - .local/share/applications
-  - .local/share/Steam/skins
+hidpi_dirs:
+  - /home/{{ item }}/.local/share/applications
+  - /home/{{ item }}/.local/share/Steam/skins/HiDPI-Steam-Skin
+
+hidpi_steam_url: https://github.com/MoriTanosuke/HiDPI-Steam-Skin.git

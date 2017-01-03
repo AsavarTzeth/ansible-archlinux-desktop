@@ -1,34 +1,33 @@
 ---
-- name: set gnome scaling factor
-  gsetting:
-    key: org.gnome.desktop.interface.scaling-factor
-    value: 'uint32 2'
-  become_user: "{{ item }}"
-  with_items:
-    - "{{ hidpi.users }}"
-    - gdm
-  tags: hidpi
+- block:
+  - name: set gnome scaling factor
+    gsetting:
+      key: org.gnome.desktop.interface.scaling-factor
+      value: 'uint32 2'
+    with_items:
+      - "{{ hidpi.users }}"
+      - gdm
 
-- name: check if app exists
-  stat: path={{ item }}
-  register: apps
-  with_items: "{{ hidpi_stat_files }}"
-  tags: hidpi
+  # unicode error without root?
+  - name: check if app exists
+    stat: path={{ item }}
+    register: apps
+    with_items: "{{ hidpi_stat_files }}"
+    become_user: root
 
-- name: set spotify scale factor
-  template:
-    src: spotify.desktop
-    dest: "/home/{{ item }}/.local/share/applications/"
-  become_user: "{{ item }}"
-  with_items: "{{ hidpi.users }}"
-  when: apps.results[0].stat.exists
-  tags: hidpi
+  - name: set spotify scale factor
+    template:
+      src: spotify.desktop
+      dest: "{{ hidpi_dirs.0 }}"
+    with_items: "{{ hidpi.users }}"
+    when: apps.results[0].stat.exists
 
-- name: install steam hidpi skin
-  git:
-    repo: https://github.com/MoriTanosuke/HiDPI-Steam-Skin.git
-    dest: "/home/{{ item }}/.local/share/Steam/skins/HiDPI-Steam-Skin"
+  - name: install steam hidpi skin
+    git:
+      repo: "{{ hidpi_steam_url }}"
+      dest: "{{ hidpi_dirs.1 }}"
+    with_items: "{{ hidpi.users }}"
+    when: apps.results[1].stat.exists
+
   become_user: "{{ item }}"
-  with_items: "{{ hidpi.users }}"
-  when: apps.results[1].stat.exists
   tags: hidpi
