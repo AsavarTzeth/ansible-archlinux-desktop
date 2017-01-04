@@ -53,7 +53,6 @@
     - mkinitcpio
     # Post-installation
     - users
-    - { role: sudo, when: sudo_enabled }
     - systemd-timesyncd
     - pacman
     - networkmanager

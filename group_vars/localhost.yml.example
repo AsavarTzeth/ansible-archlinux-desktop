@@ -18,24 +18,23 @@
 # Users & Groups
 #users_default_shell: /bin/bash
 #users_create_primary_group: true
+#users_sudo_enabled: true
 #users:
-#  - username:
-#    name: user1
+#  - name: user1
+#    gecos: Real Name
+#    homedir: /home/user1
 #    primary_group: user1
 #    groups: ['group1','group2']
+#    no_create_home: false
 #    shell: /bin/sh
 #    passwd: a-plain-text-password
 #    passwd_salt: a-unique-salt
 #    state: present
+#    sudo: ALL=(ALL) ALL
+#    system: false
 #    ssh_authorized_keys:
 #      - "ssh-rsa AAAAA.... foo@machine"
 #      - "ssh-rsa AAAAB.... bar@machine"
-
-# Sudo
-#sudo_enabled: true
-#sudo_group: wheel
-#sudo_group_gid: 10
-#sudo_group_string: ALL=(ALL) ALL
 
 # Boot
 #boot_encryption:
