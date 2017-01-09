@@ -19,6 +19,3 @@ menu_preset:
   - qv4l2.desktop
   - zenmap.desktop
   - zenmap-root.desktop
-
-menu_file_path: /usr/share/applications/
-menu_tmp_path: "{{ lookup('env','XDG_RUNTIME_DIR') }}/ansible/menu"

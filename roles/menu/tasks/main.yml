@@ -1,35 +1,16 @@
 ---
 - block:
   - name: add preset items
-    set_fact: menu_stat={{ menu_preset }}
+    set_fact: menu_files={{ menu_preset }}
     when:
       - (menu.hide_items.preset is undefined) or
         (menu.hide_items.preset)
 
   - name: add custom items
-    set_fact: menu_stat="{{ menu_stat }} + {{ menu.hide_items.custom }}"
+    set_fact: menu_files="{{ menu_files }} + {{ menu.hide_items.custom }}"
     when:
       - menu.hide_items.custom is defined
       - menu.hide_items.custom | length > 0
-
-  - name: stat desktop files
-    stat: path={{ menu_file_path }}/{{ item }}
-    with_items: "{{ menu_stat }}"
-    register: stat
-
-  - name: set existing items
-    set_fact:
-      menu_files: "{{ menu_files }} + [ '{{ item.item }}' ]"
-    when: item.stat.exists
-    with_items: "{{ stat.results }}"
-    no_log: true
-
-  - name: pull menu items
-    fetch:
-      src: "{{ menu_file_path }}/{{ item }}"
-      dest: "{{ menu_tmp_path }}/"
-      flat: true
-    with_items: "{{ menu_files }}"
 
   - name: hide menu items
     template:

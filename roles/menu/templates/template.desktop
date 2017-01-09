@@ -1,4 +1,4 @@
-#{{ ansible_managed }}
+{{ ansible_managed | comment }}
 
-{{ lookup('file',menu_tmp_path + '/' + item[0]) }}
+[Desktop Entry]
 NoDisplay=true
