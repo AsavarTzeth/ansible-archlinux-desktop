@@ -2,6 +2,7 @@
   become: true
   become_method: sudo
   gather_facts: true
+  force_handlers: true
 
   pre_tasks:
     - name: check if in chroot

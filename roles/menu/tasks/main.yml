@@ -12,6 +12,13 @@
       - menu.hide_items.custom is defined
       - menu.hide_items.custom | length > 0
 
+  - name: setup applications dir
+    file:
+      path: /home/{{ item }}/.local/share/applications
+      state: directory
+    with_items: "{{ menu.hide_items.users }}"
+    become_user: "{{ item }}"
+
   - name: hide menu items
     template:
       src: template.desktop
