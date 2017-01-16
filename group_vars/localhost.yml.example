@@ -19,7 +19,6 @@
 # Users & Groups
 #users_default_shell: /bin/bash
 #users_create_primary_group: true
-#users_sudo_enabled: true
 #users:
 #  - name: user1
 #    gecos: Real Name
@@ -42,6 +41,7 @@
 #  enabled: false
 #  cryptdevice: /dev/sdX#
 #  rootdevice: /dev/mapper/lvm-root
+#boot_options: []
 #grub_boot_device: /dev/sdX
 
 # Reflector
