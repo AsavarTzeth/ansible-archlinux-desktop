@@ -12,7 +12,7 @@
     with_items: "{{ mkinitcpio }}"
 
   when: lookup('file', '/etc/fstab').find(item.filesystem) != -1
-  tags: mkinitcpio,fstab
+  tags: mkinitcpio,fstab,dm-crypt
 
 - name: setup disk encryption
   set_fact:
