@@ -1,17 +1,24 @@
 ---
+- name: register filesystem
+  shell: cat /etc/fstab | grep -o {{ item.filesystem }}
+  changed_when: false
+  with_items: "{{ mkinitcpio }}"
+  register: mkinitcpio_fstab
+  tags: mkinitcpio,fstab,dm-crypt
+
 - block:
   - name: setup filesystem modules
     set_fact:
-      mkinitcpio_modules: "{{ mkinitcpio_modules }} + {{ item.modules }}"
-    with_items: "{{ mkinitcpio }}"
+      mkinitcpio_modules: "{{ mkinitcpio_modules }} + {{ item.item.modules }}"
+    with_items: "{{ mkinitcpio_fstab.results }}"
 
   - name: install filesystem deps
     pacman:
-      name: "{{ item.utils | default(omit) }}"
+      name: "{{ item.item.utils | default(omit) }}"
       update_cache: true
-    with_items: "{{ mkinitcpio }}"
+    with_items: "{{ mkinitcpio_fstab.results }}"
 
-  when: lookup('file', '/etc/fstab').find(item.filesystem) != -1
+  when: item.stdout.find(item.item.filesystem) != -1
   tags: mkinitcpio,fstab,dm-crypt
 
 - name: setup disk encryption
@@ -19,7 +26,7 @@
     mkinitcpio_hooks: "{{ mkinitcpio_hooks }} + ['lvm2', 'encrypt']"
     mkinitcpio_files: "{{ mkinitcpio_files }} + ['/crypto_keyfile.bin']"
   when: boot_encryption.enabled
-  tags: mkinitcpio,dm-crypt
+  tags: mkinitcpio,fstab,dm-crypt
 
 - name: setup mkinitcpio
   template:

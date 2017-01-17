@@ -15,11 +15,18 @@
   with_items: "{{ fstab_entries }}"
   tags: fstab
 
+- name: register fstab
+  command: diff /etc/fstab /etc/fstab.new
+  changed_when: fstab_result.rc == 1
+  failed_when: fstab_result.rc > 1
+  register: fstab_result
+  tags: fstab
+
 - name: columnate /etc/fstab
   shell: sed 's/#.*//' /etc/fstab | column -t > /etc/fstab.new
-  changed_when: lookup('file','/etc/fstab.new') != lookup('file','/etc/fstab')
   args:
     warn: false
+  when: fstab_result.stdout != ""
   tags: fstab
 
 - name: validate & write to /etc/fstab

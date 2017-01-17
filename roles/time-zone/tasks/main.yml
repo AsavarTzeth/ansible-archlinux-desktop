@@ -12,7 +12,13 @@
     creates: /etc/adjtime
   tags: time-zone
 
+- name: get /etc/adjtime
+  command: cat /etc/adjtime
+  changed_when: false
+  register: adjtime
+  tags: time-zone
+
 - name: set hardware clock to utc
   command: hwclock --systohc --utc
-  when: lookup('file', '/etc/adjtime').find('UTC') == -1
+  when: adjtime.stdout.find('UTC') == -1
   tags: time-zone
