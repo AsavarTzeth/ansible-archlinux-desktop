@@ -1,29 +1,31 @@
 ---
-- name: add temporary mount point
-  file:
-    path: "{{ aur_work_dir }}"
-    mode: 0755
-    state: directory
-
-- command: mountpoint -q "{{ aur_work_dir }}"
-  register: aur_tmp_mount
-  failed_when: false
+- name: get /tmp mount options
+  shell: 'cat /proc/mounts | egrep "\s/tmp\s" | awk "{ print $4 }"'
   changed_when: false
+  register: aur_tmp_mnt_opt
+  become: false
 
-- name: mount temporary tmpfs
-  command: >
-    mount -t tmpfs -o
-    nodev,nosuid,exec,noatime,uid={{ ansible_env.SUDO_UID }},mode=0755
-    tmpfs {{ aur_work_dir }}
+- name: remount /tmp with exec
+  command: mount -o remount,exec /tmp
   args:
     warn: false
-  changed_when: false
-  when: aur_tmp_mount.rc != 0
+  when: aur_tmp_mnt_opt.stdout.find('noexec') != -1
+  notify: remount /tmp
+  become: true
 
 - name: install dependencies
   pacman:
     name: base-devel
     update_cache: true
+  become: true
+
+- name: setup build dir
+  file:
+    path: "{{ aur_work_dir }}"
+    owner: "{{ ansible_user }}"
+    mode: 0755
+    state: directory
+  become: true
 
 - name: install aur packages
   makepkg:
@@ -32,18 +34,14 @@
     as_deps: "{{ item.dep | default(false) }}"
     build_dir: "{{ aur_work_dir }}"
   with_items: "{{ aur.install | default(aur_default_install) }}"
+  become: true
 
-- name: cleanup mountpoint
-  command: umount "{{ aur_work_dir }}"
-  args:
-    warn: false
-  changed_when: false
-
-# If yaourt is installed, make sure it works with /tmp mounted with
-# noexec mount option, among other things
+# If yaourt is installed, make sure it works XDG_RUNTIME_DIR instead of
+# /tmp which should be mounted with noexec option
 - name: check if yaourtrc exists
   stat: path=/etc/yaourtrc
   register: yaourtrc
+  become: false
 
 - name: setup yaourtrc
   lineinfile:
@@ -53,3 +51,4 @@
     insertafter: "^#{{ item.key }}"
   with_items: "{{ yaourtrc_lines }}"
   when: yaourtrc.stat.exists
+  become: true
