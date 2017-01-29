@@ -17,8 +17,8 @@
 
 - name: register fstab
   command: diff /etc/fstab /etc/fstab.new
-  changed_when: fstab_result.rc == 1
-  failed_when: fstab_result.rc > 1
+  changed_when: fstab_result.rc != 0
+  failed_when: false
   register: fstab_result
   tags: fstab
 
@@ -26,7 +26,7 @@
   shell: sed 's/#.*//' /etc/fstab | column -t > /etc/fstab.new
   args:
     warn: false
-  when: fstab_result.stdout != ""
+  when: fstab_result | changed
   tags: fstab
 
 - name: validate & write to /etc/fstab
