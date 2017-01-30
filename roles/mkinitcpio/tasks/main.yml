@@ -2,6 +2,7 @@
 - name: register filesystem
   shell: cat /etc/fstab | grep -o {{ item.filesystem }}
   changed_when: false
+  failed_when: mkinitcpio_fstab.rc > 1
   with_items: "{{ mkinitcpio }}"
   register: mkinitcpio_fstab
   tags: mkinitcpio,fstab,dm-crypt
