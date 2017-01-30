@@ -1,7 +1,15 @@
 ---
-- name: setup systemd-timesyncd
-  service:
-    name: systemd-timesyncd
-    state: "{{ omit if chroot_mode else 'started' }}"
-    enabled: true
+- block:
+  - name: setup systemd-timesyncd.service
+    systemd:
+      name: systemd-timesyncd
+      state: started
+      enabled: true
+  rescue:
+  - name: enable systemd-timesyncd.service manually
+    file:
+      src: "{{ item.src | default(omit) }}"
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+    with_items: "{{ systemd_timesyncd_rescue }}"
   tags: systemd-timesyncd,ntp

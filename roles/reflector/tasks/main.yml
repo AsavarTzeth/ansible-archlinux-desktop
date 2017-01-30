@@ -19,16 +19,23 @@
   with_items: "{{ reflector_files }}"
   tags: reflector
 
-- name: enable reflector.timer
-  service:
-    name: reflector.timer
-    state: "{{ omit if chroot_mode else 'started' }}"
-    enabled: true
-  tags: reflector
+- block:
+  - name: setup reflector.timer
+    systemd:
+      name: reflector.timer
+      state: started
+      enabled: true
+  rescue:
+  - name: enable reflector.timer manually
+    file:
+      src: "{{ item.src | default(omit) }}"
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+    with_items: "{{ reflector_rescue }}"
 
-- name: run reflector
-  command: '/usr/bin/reflector -p https -l 50 -n 5 --sort rate
-           {% for o in reflector_countries %}--country {{ o }} {% endfor %}
-           --save /etc/pacman.d/mirrorlist'
-  when: chroot_mode
+  - name: run reflector
+    command: '/usr/bin/reflector -p https -l 50 -n 5 --sort rate
+             {% for o in reflector_countries %}--country {{ o }} {% endfor %}
+             --save /etc/pacman.d/mirrorlist'
+
   tags: reflector

@@ -5,9 +5,17 @@
     update_cache: true
   tags: networkmanager
 
-- name: start networkmanager
-  service:
-    name: NetworkManager
-    state: "{{ omit if chroot_mode else 'started' }}"
-    enabled: true
+- block:
+  - name: setup NetworkManager.service
+    systemd:
+      name: NetworkManager
+      state: started
+      enabled: true
+  rescue:
+  - name: enable NetworkManager.service manually
+    file:
+      src: "{{ item.src | default(omit) }}"
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+    with_items: "{{ networkmanager_rescue }}"
   tags: networkmanager

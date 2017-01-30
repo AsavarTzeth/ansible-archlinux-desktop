@@ -1,0 +1,13 @@
+---
+networkmanager_rescue:
+  - path: /etc/systemd/system/multi-user.target.wants
+    state: directory
+  - path: /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+    src: /usr/lib/systemd/system/NetworkManager.service
+    state: link
+  - path: /etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
+    src: /usr/lib/systemd/system/NetworkManager.service
+    state: link
+  - path: /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
+    src: /usr/lib/systemd/system/NetworkManager-dispatcher.service
+    state: link

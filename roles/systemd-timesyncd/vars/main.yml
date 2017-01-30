@@ -1,0 +1,7 @@
+---
+systemd_timesyncd_rescue:
+  - path: /etc/systemd/system/sysinit.target.wants
+    state: directory
+  - path: /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
+    src: /usr/lib/systemd/system/systemd-timesyncd.service
+    state: link

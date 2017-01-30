@@ -6,3 +6,10 @@ reflector_files:
     dest: /etc/systemd/system/reflector.service
   - src: reflector.timer.j2
     dest: /etc/systemd/system/reflector.timer
+
+reflector_rescue:
+  - path: /etc/systemd/system/timers.target.wants
+    state: directory
+  - path: /etc/systemd/system/timers.target.wants/reflector.timer
+    src: /etc/systemd/system/reflector.timer
+    state: link
