@@ -5,26 +5,11 @@
     regexp: '^Include = /etc/pacman.d/multilib'
     line: 'Include = /etc/pacman.d/multilib'
   when: ansible_architecture == "x86_64"
-  tags: packages,pacman
+  tags: pacman
 
 - name: add multilib support
   template:
     src: multilib
     dest: /etc/pacman.d/multilib
   when: ansible_architecture == "x86_64"
-  tags: packages,pacman
-
-- name: upgrade all packages
-  pacman:
-    upgrade: true
-    update_cache: true
-  tags: packages,pacman
-
-- name: install user packages
-  pacman:
-    name: "{{ packages }}"
-    update_cache: true
-  when:
-    - packages is defined
-    - packages
-  tags: packages,pacman
+  tags: pacman

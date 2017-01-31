@@ -65,6 +65,7 @@
     # Desktop & user preferences
     - { role: yubikey, when: yubikey.enabled | default(false) }
     - openvpn
+    - user-packages
     # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
     # this breaks when the true ansible_user is root (when running live install)
     - role: aur

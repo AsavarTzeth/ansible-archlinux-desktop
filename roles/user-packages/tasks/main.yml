@@ -1,0 +1,14 @@
+---
+- name: upgrade all packages
+  pacman:
+    upgrade: true
+    update_cache: true
+  tags: packages,apps
+
+- name: install user packages
+  pacman: name={{ packages }}
+  when:
+    - packages is defined
+    - packages
+    - packages | length > 0
+  tags: packages,apps
