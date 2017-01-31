@@ -58,7 +58,6 @@
     - pacman
     - networkmanager
     - pulseaudio
-    - xorg
     - { role: nvidia, when: nvidia }
     - vulkan
     - gnome

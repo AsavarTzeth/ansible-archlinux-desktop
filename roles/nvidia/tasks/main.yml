@@ -1,15 +1,13 @@
 ---
+- set_fact:
+    nvidia_packages: "{{ nvidia_packages }} {{ nvidia_packages_lib32 }}"
+  when: ansible_architecture == "x86_64"
+  tags: nvidia
+
 - name: install nvidia driver
   pacman:
     name: nvidia
     update_cache: true
-  tags: nvidia
-
-- name: install 32-bit nvidia libs
-  pacman:
-    name: lib32-nvidia-libgl
-    update_cache: true
-  when: ansible_architecture == "x86_64"
   tags: nvidia
 
 - name: enable rootless xorg

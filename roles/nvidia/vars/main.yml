@@ -1,0 +1,3 @@
+---
+nvidia_packages: nvidia nvidia-libgl
+nvidia_packages_lib32: lib32-nvidia-libgl
