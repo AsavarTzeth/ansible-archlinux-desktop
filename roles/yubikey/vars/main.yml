@@ -35,3 +35,10 @@ yubikey_dirs:
 yubikey_links:
  - target: .local/share/systemd/user/gpg-agent.service
    link: .config/systemd/user/default.target.wants/gpg-agent.service
+
+yubikey_rescue:
+  - path: /etc/systemd/system/socket.target.wants
+    state: directory
+  - path: /etc/systemd/system/socket.target.wants/pcscd.socket
+    src: /usr/lib/systemd/system/pcscd.socket
+    state: link

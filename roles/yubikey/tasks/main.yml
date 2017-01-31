@@ -49,11 +49,19 @@
     line: PKCS11Provider /usr/lib/opensc-pkcs11.so
   tags: yubikey
 
-- name: start pcscd.socket
-  service:
-    name: pcscd.socket
-    state: "{{ omit if chroot_mode else 'started' }}"
-    enabled: true
+- block:
+  - name: setup pcscd.socket
+    systemd:
+      name: pcscd.socket
+      state: started
+      enabled: true
+  rescue:
+  - name: setup pcscd.socket manually
+    file:
+      src: "{{ item.src | default(omit) }}"
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+    with_items: "{{ yubikey_rescue }}"
   tags: yubikey
 
 - name: enable user gpg-agent.service
