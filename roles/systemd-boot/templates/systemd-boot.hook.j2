@@ -7,5 +7,7 @@ Target = systemd
 
 [Action]
 Description = Updating systemd-boot on the EFI system partition...
+Depends = bash
+Depends = util-linux
 When = PostTransaction
-Exec = /usr/bin/bootctl --path={{ systemd_boot_esp }} update
+Exec = /usr/bin/sh -c "/usr/bin/mount -o remount,rw /sys/firmware/efi/efivars && /usr/bin/bootctl --path={{ systemd_boot_esp }} update && /usr/bin/mount -o remount,ro /sys/firmware/efi/efivars"
