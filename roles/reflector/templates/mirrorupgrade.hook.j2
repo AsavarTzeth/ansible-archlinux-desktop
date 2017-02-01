@@ -1,4 +1,4 @@
-#{{ ansible_managed }}
+{{ ansible_managed | comment }}
 
 [Trigger]
 Operation = Upgrade
@@ -7,6 +7,8 @@ Target = pacman-mirrorlist
 
 [Action]
 Description = Updating pacman-mirrorlist with reflector and removing pacnew...
-When = PostTransaction
+Depends = bash
+Depends = coreutils
 Depends = reflector
-Exec = /usr/bin/bash -c "reflector -l 50  -n 5--sort rate {% for o in reflector_countries %}--country {{ o }} {% endfor %} --save /etc/pacman.d/mirrorlist && [[ -f /etc/pacman.d/mirrorlist.pacnew ]] && rm /etc/pacman.d/mirrorlist.pacnew"
+When = PostTransaction
+Exec = /usr/bin/sh -c "/usr/bin/reflector -l 50 -n 5--sort rate {% for o in reflector_countries %}--country {{ o }} {% endfor %} --save /etc/pacman.d/mirrorlist && [[ -f /etc/pacman.d/mirrorlist.pacnew ]] && /usr/bin/rm /etc/pacman.d/mirrorlist.pacnew"
