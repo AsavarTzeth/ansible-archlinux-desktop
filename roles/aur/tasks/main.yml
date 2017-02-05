@@ -34,21 +34,13 @@
     as_deps: "{{ item.dep | default(false) }}"
     build_dir: "{{ aur_work_dir }}"
   with_items: "{{ aur.install | default(aur_default_install) }}"
+  ignore_errors: true
   become: true
 
-# If yaourt is installed, make sure it works XDG_RUNTIME_DIR instead of
-# /tmp which should be mounted with noexec option
-- name: check if yaourtrc exists
-  stat: path=/etc/yaourtrc
-  register: yaourtrc
-  become: false
-
 - name: setup yaourtrc
-  lineinfile:
-    dest: /etc/yaourtrc
-    line: "{{ item.key }}{{ item.value }}"
-    regexp: "^{{ item.key }}"
-    insertafter: "^#{{ item.key }}"
-  with_items: "{{ yaourtrc_lines }}"
-  when: yaourtrc.stat.exists
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+    mode: 0644
+  with_items: "{{ aur_files }}"
   become: true
