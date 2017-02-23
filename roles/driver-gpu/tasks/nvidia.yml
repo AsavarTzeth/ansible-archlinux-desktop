@@ -1,0 +1,19 @@
+---
+- block:
+  - set_fact:
+      nvidia_packages: "{{ nvidia_packages }} {{ nvidia_packages_lib32 }}"
+    when: ansible_architecture == "x86_64"
+    become: false
+
+  - name: install nvidia driver
+    pacman:
+      name: "{{ nvidia_packages }}"
+      update_cache: true
+
+  - name: enable rootless xorg
+    template:
+      src: Xwrapper.config
+      dest: /etc/X11/
+
+  tags: nvidia
+  become: true

@@ -1,17 +1,11 @@
 ---
-- set_fact:
-    nvidia_packages: "{{ nvidia_packages }} {{ nvidia_packages_lib32 }}"
-  when: ansible_architecture == "x86_64"
+- name: find graphics hardware
+  shell: lspci | grep -e VGA -e 3D
+  register: graphics
+  changed_when: false
+  become: false
   tags: nvidia
 
-- name: install nvidia driver
-  pacman:
-    name: nvidia
-    update_cache: true
-  tags: nvidia
-
-- name: enable rootless xorg
-  template:
-    src: Xwrapper.config
-    dest: /etc/X11/
+- include: nvidia.yml
+  when: graphics.stdout.find('NVIDIA')
   tags: nvidia
