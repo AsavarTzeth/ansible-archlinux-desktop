@@ -47,7 +47,6 @@
     - networkmanager
     - pulseaudio
     - driver-gpu
-    - vulkan
     - gnome
     # Desktop & user preferences
     - { role: yubikey, when: yubikey.enabled | default(false) }
