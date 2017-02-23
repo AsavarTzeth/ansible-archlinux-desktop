@@ -18,7 +18,7 @@
   when: graphics.stdout.find('Intel') != -1
   tags: gpu,amd
 
-- name: install vulkan support
+- name: install vulkan drivers
   pacman:
     name: "{{ vulkan_packages }}"
     update_cache: true
