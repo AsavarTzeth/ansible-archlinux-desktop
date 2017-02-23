@@ -1,0 +1,14 @@
+---
+- block:
+  - set_fact:
+      amd_packages: "{{ amd_packages }} {{ amd_packages_lib32 }}"
+    when: ansible_architecture == "x86_64"
+    become: false
+
+  - name: install amd/ati drivers
+    pacman:
+      name: "{{ amd_packages }}"
+      update_cache: true
+
+  tags: amd
+  become: true

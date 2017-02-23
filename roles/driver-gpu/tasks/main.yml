@@ -4,8 +4,12 @@
   register: graphics
   changed_when: false
   become: false
-  tags: nvidia
+  tags: nvidia,amd
 
 - include: nvidia.yml
   when: graphics.stdout.find('NVIDIA')
   tags: nvidia
+
+- include: amd.yml
+  when: graphics.stdout.find('AMD')
+  tags: amd
