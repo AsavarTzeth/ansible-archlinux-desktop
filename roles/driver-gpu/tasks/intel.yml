@@ -1,0 +1,14 @@
+---
+- block:
+  - set_fact:
+      intel_packages: "{{ intel_packages }} {{ intel_packages_lib32 }}"
+    when: ansible_architecture == "x86_64"
+    become: false
+
+  - name: install intel drivers
+    pacman:
+      name: "{{ intel_packages }}"
+      update_cache: true
+
+  tags: intel
+  become: true

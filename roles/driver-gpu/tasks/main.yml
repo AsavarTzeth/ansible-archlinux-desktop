@@ -13,3 +13,13 @@
 - include: amd.yml
   when: graphics.stdout.find('AMD')
   tags: amd
+
+- include: intel.yml
+  when: graphics.stdout.find('Intel')
+  tags: amd
+
+- name: install vulkan support
+  pacman:
+    name: "{{ vulkan_packages }}"
+    update_cache: true
+  tags: amd,intel,nvidia
