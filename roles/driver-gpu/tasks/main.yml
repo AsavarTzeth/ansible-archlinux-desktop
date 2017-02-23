@@ -4,22 +4,22 @@
   register: graphics
   changed_when: false
   become: false
-  tags: nvidia,amd
+  tags: gpu,nvidia,amd
 
 - include: nvidia.yml
-  when: graphics.stdout.find('NVIDIA')
-  tags: nvidia
+  when: graphics.stdout.find('NVIDIA') != -1
+  tags: gpu,nvidia
 
 - include: amd.yml
-  when: graphics.stdout.find('AMD')
-  tags: amd
+  when: graphics.stdout.find('AMD') != -1
+  tags: gpu,amd
 
 - include: intel.yml
-  when: graphics.stdout.find('Intel')
-  tags: amd
+  when: graphics.stdout.find('Intel') != -1
+  tags: gpu,amd
 
 - name: install vulkan support
   pacman:
     name: "{{ vulkan_packages }}"
     update_cache: true
-  tags: amd,intel,nvidia
+  tags: gpu,amd,intel,nvidia
