@@ -58,7 +58,7 @@
     - pacman
     - networkmanager
     - pulseaudio
-    - { role: nvidia, when: nvidia }
+    - { role: driver-gpu, when: nvidia }
     - vulkan
     - gnome
     # Desktop & user preferences
