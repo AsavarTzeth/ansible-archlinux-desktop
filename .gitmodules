@@ -11,6 +11,3 @@
 [submodule "library"]
 	path = library
 	url = https://github.com/AsavarTzeth/ansible-gsetting.git
-[submodule "roles/users"]
-	path = roles/users
-	url = https://github.com/AsavarTzeth/ansible-users.git
