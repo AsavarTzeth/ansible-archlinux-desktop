@@ -1,13 +1,13 @@
 ---
 vulkan_packages: ['vulkan-icd-loader']
 
-nvidia_packages: nvidia nvidia-libgl
-nvidia_packages_lib32: lib32-nvidia-libgl
+nvidia_packages: nvidia
+nvidia_packages_lib32: lib32-nvidia-utils
 
-amd_packages: xf86-video-amdgpu xf86-video-ati mesa-libgl
-amd_packages_lib32: lib32-mesa-libgl
+amd_packages: xf86-video-amdgpu xf86-video-ati mesa
+amd_packages_lib32: lib32-mesa
 amd_vulkan_packages: ['vulkan-radeon']
 
-intel_packages: mesa-libgl
-intel_packages_lib32: lib32-mesa-libgl
+intel_packages: mesa
+intel_packages_lib32: lib32-mesa
 intel_vulkan_packages: ['vulkan-intel']
