@@ -1,18 +1,16 @@
 ---
 - block:
-  - set_fact:
-      intel_packages: "{{ intel_packages }} {{ intel_packages_lib32 }}"
-      vulkan_packages: "{{ vulkan_packages }} + {{ intel_vulkan_packages }}"
+  - name: set intel packages
+    set_fact:
+      driver_pkg: "{{ driver_pkg }} + {{ intel_pkg }} + {{ intel_pkg_lib32 }}"
+      vlk_pkg: "{{ vlk_pkg }} + {{ intel_vlk_pkg }} + {{ intel_vlk_pkg_lib32 }}"
     when: ansible_architecture == "x86_64"
-    become: false
 
-  # Until mesa fully supports libglvnd do not install mesa drivers
-  # when nvidia graphics is in use.
-  - name: install intel drivers
-    pacman:
-      name: "{{ intel_packages }}"
-      update_cache: true
-    when: graphics.stdout.find('NVIDIA') == -1
+  - name: set intel packages (x86)
+    set_fact:
+      driver_pkg: "{{ driver_pkg }} + {{ intel_pkg }}"
+      vlk_pkg: "{{ vlk_pkg }} + {{ intel_vlk_pkg }}"
+    when: ansible_architecture == "x86"
 
   tags: intel
-  become: true
+  become: false

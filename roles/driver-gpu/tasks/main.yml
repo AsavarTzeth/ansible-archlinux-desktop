@@ -4,22 +4,34 @@
   register: graphics
   changed_when: false
   become: false
-  tags: gpu,nvidia,amd
+  tags: gpu,amd,intel,nvidia
 
-- include: nvidia.yml
-  when: graphics.stdout.find('NVIDIA') != -1
-  tags: gpu,nvidia
+- set_fact: vlk_pkg="{{ vlk_pkg }} + {{ vlk_pkg_lib32 }}"
+  when: ansible_architecture == "x86_64"
+  tags: gpu,amd,intel,nvidia
 
-- include: amd.yml
-  when: graphics.stdout.find('AMD') != -1
-  tags: gpu,amd
+- block:
+  - include: nvidia.yml
+    when: graphics.stdout.find('NVIDIA') != -1
+    tags: nvidia
 
-- include: intel.yml
-  when: graphics.stdout.find('Intel') != -1
-  tags: gpu,amd
+  - include: amd.yml
+    when: graphics.stdout.find('AMD') != -1
+    tags: amd
+
+  - include: intel.yml
+    when: graphics.stdout.find('Intel') != -1
+    tags: intel
+  tags: gpu
+
+- name: install gpu drivers
+  pacman:
+    name: "{{ driver_pkg }}"
+    update_cache: true
+  tags: gpu,amd,intel,nvidia
 
 - name: install vulkan drivers
   pacman:
-    name: "{{ vulkan_packages }}"
+    name: "{{ vlk_pkg }}"
     update_cache: true
   tags: gpu,amd,intel,nvidia
