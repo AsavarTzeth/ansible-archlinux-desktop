@@ -31,9 +31,7 @@
 
   roles:
     # Core-installation
-    - time-zone
-    - locale
-    - network
+    - sys-config
     - root
     - { role: fstab, when: fstab.enabled | default(true) }
     - reflector

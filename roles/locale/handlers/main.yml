@@ -1,5 +1,0 @@
----
-- name: locale-regen
-  command: locale-gen
-  register: result
-  failed_when: result.stdout.find('error') != -1

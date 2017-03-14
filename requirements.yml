@@ -3,3 +3,11 @@
   version: master
   name: users
   scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-sys-config
+  version: master
+  name: sys-config
+  scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-hosts
+  version: master
+  name: hosts
+  scm: git

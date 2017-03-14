@@ -1,6 +1,0 @@
-#{{ ansible_managed }}
-
-{% for o in locale_gen %}
-{{ o | regex_replace('\.',' ') }}
-{% endfor %}
-{{ locale_lang | regex_replace('\.',' ') }}
