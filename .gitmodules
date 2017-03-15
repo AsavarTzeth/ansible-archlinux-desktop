@@ -1,6 +1,0 @@
-[submodule "roles/gnome/library"]
-	path = roles/gnome/library
-	url = https://github.com/AsavarTzeth/ansible-gnome_shell_extension.git
-[submodule "library"]
-	path = library
-	url = https://github.com/AsavarTzeth/ansible-gsetting.git

@@ -1,8 +1,0 @@
-{{ ansible_managed | comment }}
-
-[org/gnome/shell/extensions/arch-update]
-{% if yaourt.stat.exists %}
-update-cmd="gnome-terminal -e 'sh -c \"yaourt -Syua ; echo Done - Press Enter to exit; read\" '"
-{% else %}
-update-cmd="gnome-terminal -e 'sh -c \"sudo pacman -Syu ; echo Done - Press Enter to exit; read\" '"
-{% endif %}

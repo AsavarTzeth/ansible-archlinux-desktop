@@ -1,0 +1,95 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# This is a derivative work, based on the original work of
+# Jiří Stránský, which can be found at:
+# https://github.com/jistr/ansible-gsetting
+#
+# At this point only the _split_key function remains of the original
+# work, the rest is modified or even rewritten content. The original
+# code lacked any license boilerplate or copyright notice. If this is
+# wished for it can be found at:
+# https://www.apache.org/licenses/LICENSE-2.0#apply
+#
+# Copyright (c) 2016, Patrik Nilsson
+# All rights reserved.
+#
+# This derivative work is sublicensed under the following conditions.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+def _split_key(full_key):
+    key_array = full_key.split('.')
+    schema = '.'.join(key_array[0:-1])
+    single_key = key_array[-1]
+    return (schema, single_key)
+
+def _run_command(module, args):
+    cmd = [module.get_bin_path('dbus-run-session')]
+    cmd.extend([module.get_bin_path('gsettings')])
+    cmd.extend(args)
+    return module.run_command(cmd)
+
+def _set_value(module, full_key, value):
+    schema, single_key = _split_key(full_key)
+    args = ('set', schema, single_key, value)
+    return _run_command(module, args)
+
+def _get_value(module, full_key):
+    schema, single_key = _split_key(full_key)
+    args = ('get', schema, single_key)
+    return _run_command(module, args)[1][:-1]
+
+def main():
+    module = AnsibleModule(
+        argument_spec = dict(
+            key   = dict(required=True, type='str'),
+            value = dict(required=True, type='str'),
+        ),
+        supports_check_mode = True
+    )
+
+    params = module.params
+    key = module.params['key']
+    value = module.params['value']
+
+    result = {
+        'changed': False,
+        'key': key,
+        'value': value,
+        'old_value': None,
+    }
+
+    result['old_value'] = _get_value(module, key)
+    result['changed'] = result['old_value'] != value
+
+    if result['changed'] and not module.check_mode:
+        _set_value(module, key, value)
+
+    module.exit_json(**result)
+
+from ansible.module_utils.basic import AnsibleModule
+if __name__ == '__main__':
+    main()

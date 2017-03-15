@@ -3,6 +3,10 @@
   version: master
   name: aur
   scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-gnome
+  version: master
+  name: gnome
+  scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-grub
   version: master
   name: grub
