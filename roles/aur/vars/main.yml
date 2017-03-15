@@ -1,4 +1,0 @@
----
-aur_work_dir: /tmp/ansible-aur
-
-aur_files: ['makepkg.conf','yaourtrc']

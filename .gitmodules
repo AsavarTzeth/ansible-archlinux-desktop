@@ -1,10 +1,6 @@
 [submodule "roles/grub"]
 	path = roles/grub
 	url = https://github.com/AsavarTzeth/ansible-grub.git
-[submodule "roles/aur/library"]
-	path = roles/aur/library
-	url = https://github.com/AsavarTzeth/ansible-makepkg.git
-	branch = urlunsplit_fix
 [submodule "roles/gnome/library"]
 	path = roles/gnome/library
 	url = https://github.com/AsavarTzeth/ansible-gnome_shell_extension.git

@@ -1,13 +1,18 @@
 ---
-- src: https://github.com/AsavarTzeth/ansible-role-users
+- src: https://github.com/AsavarTzeth/ansible-role-aur
   version: master
-  name: users
-  scm: git
-- src: https://github.com/AsavarTzeth/ansible-role-sys-config
-  version: master
-  name: sys-config
+  name: aur
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-hosts
   version: master
   name: hosts
   scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-sys-config
+  version: master
+  name: sys-config
+  scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-users
+  version: master
+  name: users
+  scm: git
+

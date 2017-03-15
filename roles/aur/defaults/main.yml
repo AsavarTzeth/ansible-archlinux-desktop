@@ -1,8 +1,0 @@
----
-aur:
-  enabled: false
-
-aur_default_install:
-  - pkg: package-query
-    dep: true
-  - pkg: yaourt
