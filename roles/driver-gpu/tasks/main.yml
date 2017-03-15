@@ -28,6 +28,7 @@
   pacman:
     name: "{{ driver_pkg }}"
     update_cache: true
+  when: driver_pkg | length > 0
   tags: gpu,amd,intel,nvidia
 
 - name: install vulkan drivers
