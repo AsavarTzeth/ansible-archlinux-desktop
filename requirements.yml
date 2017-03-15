@@ -3,6 +3,10 @@
   version: master
   name: aur
   scm: git
+- src: https://github.com/AsavarTzeth/ansible-role-grub
+  version: master
+  name: grub
+  scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-hosts
   version: master
   name: hosts
