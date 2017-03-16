@@ -31,28 +31,29 @@
 
   roles:
     # Core-installation
-    - sys-config
+    - AsavarTzeth.sys-config
+    - AsavarTzeth.hosts
     - root
     - { role: fstab, when: fstab.enabled | default(true) }
     - reflector
     - { role: systemd-boot, when: boot_manager == 'systemd-boot' }
-    - { role: grub, when: boot_manager == 'grub' }
+    - { role: AsavarTzeth.grub, when: boot_manager == 'grub' }
     - mkinitcpio
     # Post-installation
-    - users
+    - AsavarTzeth.users
     - systemd-timesyncd
     - pacman
     - networkmanager
     - pulseaudio
     - driver-gpu
-    - gnome
+    - AsavarTzeth.gnome
     # Desktop & user preferences
     - { role: yubikey, when: yubikey.enabled | default(false) }
     - openvpn
     - user-packages
     # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
     # this breaks when the true ansible_user is root (when running live install)
-    - role: aur
+    - role: AsavarTzeth.aur
       when:
         - ansible_env.SUDO_USER is defined
         - ansible_env.SUDO_USER != 'root'

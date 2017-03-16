@@ -1,26 +1,26 @@
 ---
 - src: https://github.com/AsavarTzeth/ansible-role-aur
   version: master
-  name: aur
+  name: AsavarTzeth.aur
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-gnome
   version: master
-  name: gnome
+  name: AsavarTzeth.gnome
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-grub
   version: master
-  name: grub
+  name: AsavarTzeth.grub
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-hosts
   version: master
-  name: hosts
+  name: AsavarTzeth.hosts
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-sys-config
   version: master
-  name: sys-config
+  name: AsavarTzeth.sys-config
   scm: git
 - src: https://github.com/AsavarTzeth/ansible-role-users
   version: master
-  name: users
+  name: AsavarTzeth.users
   scm: git
 
