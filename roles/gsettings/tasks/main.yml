@@ -1,20 +1,32 @@
 ---
-- name: set gsettings for users
-  gsetting:
-    key: "{{ item.0.schema }}.{{ item.0.key }}"
-    value: "{{ item.0.value }}"
-  become_user: "{{ item.1 }}"
-  with_subelements:
-    - "{{ gsettings }}"
-    - users
-  tags: gsettings
+- block:
+  - name: set gsettings for users
+    gsetting:
+      key: "{{ item.0.schema }}.{{ item.0.key }}"
+      value: "{{ item.0.value }}"
+    become_user: "{{ item.1 }}"
+    with_subelements:
+      - "{{ gsettings }}"
+      - users
+    when: gsettings is defined
 
-- name: set gsettings per user
-  gsetting:
-    key: "{{ item.1.schema}}.{{ item.1.key }}"
-    value: "{{ item.1.value }}"
-  become_user: "{{ item.0.user }}"
-  with_subelements:
-    - "{{ gsettings_per_user }}"
-    - settings
+  - name: set gsettings per user
+    gsetting:
+      key: "{{ item.1.schema}}.{{ item.1.key }}"
+      value: "{{ item.1.value }}"
+    become_user: "{{ item.0.user }}"
+    with_subelements:
+      - "{{ gsettings_per_user }}"
+      - settings
+    when: gsettings_per_user is defined
+
+  - name: set gsettings with hashes
+    gsetting:
+      key: "{{ item.key }}"
+      value: "{{ item.value.value }}"
+    with_dict: "{{ gsettings_dict }}"
+    become: false
+    when: gsettings_dict is defined
+
+  become: true
   tags: gsettings

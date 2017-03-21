@@ -1,4 +1,0 @@
----
-# Loops will fail if its variable(s) is undefined
-gsettings: []
-gsettings_per_user: []
