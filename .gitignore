@@ -1,4 +1,4 @@
-host_vars/localhost.yml
-group_vars/localhost.yml
+host_vars/
+group_vars/
 site.retry
 TODO
