@@ -5,17 +5,6 @@
   force_handlers: true
 
   pre_tasks:
-    - name: check if in chroot
-      shell: '[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]
-             && echo true || echo false'
-      register: chroot
-      changed_when: false
-      tags: always
-
-    - name: set chroot_mode
-      set_fact: chroot_mode={{ true if chroot.stdout == 'true' else false }}
-      tags: always
-
     - name: verify boot mode
       stat: path=/sys/firmware/efi/efivars
       register: efi
