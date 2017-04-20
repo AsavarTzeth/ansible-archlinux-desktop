@@ -1,17 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# This is a derivative work, based on the original work of
-# Jiří Stránský, which can be found at:
-# https://github.com/jistr/ansible-gsetting
-#
-# At this point only the _split_key function remains of the original
-# work, the rest is modified or even rewritten content. The original
-# code lacked any license boilerplate or copyright notice. If this is
-# wished for it can be found at:
-# https://www.apache.org/licenses/LICENSE-2.0#apply
-#
-# Copyright (c) 2016, Patrik Nilsson
+# Copyright (c) 2017, Patrik Nilsson
 # All rights reserved.
 #
 # This derivative work is sublicensed under the following conditions.
@@ -40,33 +30,185 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+DOCUMENTATION = '''
+---
+module: gsetting
+short_description: Configure modern GNOME applications
+description:
+    - Set values of keys in a dconf database, using the gsettings
+      tool. This is useful for configuring many gtk applications.
+version_added: "2.2.1"
+author: "Patrik Nilsson (@AsavarTzeth)"
+requirements:
+    - dbus
+    - gsettings
+options:
+    key:
+        description:
+            - The key is a GSettings SCHEMA and KEY combined into a
+              single uri. See the examples to get an idea.
+        required: true
+    value:
+        description:
+            - The type of value depends on the key. Be especially
+              mindful of string values which must include explicit
+              qoutes: "'foo'".
+        required: true
+    state:
+        description:
+            - The action to take with the key/value pair. If set to
+              absent, it will reset the key to its default value.
+        default: present
+        choices:
+            - present
+            - absent
+'''
+
+EXAMPLES = '''
+# Double qoute strings to preserve the single qoutes
+- gsetting:
+    key: org.gnome.nautilus.preferences.default-folder-viewer
+    value: "'list-view'"
+
+# Get current value of a key without making any changes
+- gsetting:
+    key: org.gnome.nautilus.preferences.default-folder-viewer
+    state: get
+
+# Reset key to its default value
+- gsetting:
+    key: org.gnome.nautilus.preferences.default-folder-viewer
+    state: absent
+
+# Set the value of a key for different user
+- gsetting:
+    key: org.gnome.desktop.wm.preferences.audible-bell
+    value: "false"
+  become: true
+  become_user: "{{ username }}"
+
+# Set a list type value of a key
+- gsetting:
+    key: org.gnome.nautilus.list-view.default-visible-columns
+    value: "['name','size','type','date_modified']"
+
+# Set a null value list
+- gsetting:
+    key: org.gnome.desktop.wm.keybindings.panel-main-menu
+    value: "@as []"
+
+# Set a list of tuples
+- gsetting:
+    key: org.gnome.desktop.input-sources.sources
+    value: "[('xkb','se'),('xkb','us')]"
+
+# Set a 32 bit integer
+- gsetting:
+    key: org.gnome.desktop.interface.scaling-factor
+    value: "uint32 2"
+'''
+
+RETURN = '''
+key:
+    description: key passed to gsettings
+    returned: success
+    type: string
+    sample: org.gnome.desktop.wm.preferences.audible-bell
+current_value:
+    description: current value
+    returned: on state=get
+    type: string
+    sample: false
+new_value:
+    description: value after any changes
+    returned: changed
+    type: string
+    sample: true
+previous_value:
+    description: value before any changes
+    returned: changed
+    type: string
+    sample: false
+'''
+
+from ansible.module_utils.basic import AnsibleModule
+
 def _split_key(full_key):
-    key_array = full_key.split('.')
-    schema = '.'.join(key_array[0:-1])
-    single_key = key_array[-1]
-    return (schema, single_key)
+    key_list = full_key.split('.')
+    schema = '.'.join(key_list[:-1])
+    key = key_list[-1]
+    return (schema, key)
 
-def _run_command(module, args):
-    cmd = [module.get_bin_path('dbus-run-session')]
-    cmd.extend([module.get_bin_path('gsettings')])
-    cmd.extend(args)
-    return module.run_command(cmd)
+def _set_compat_args(cmd, args):
+    cmd = list(cmd)
+    cmd[4:4] = args
+    # A string is required with use_unsafe_shell=True
+    cmd = ' '.join(cmd)
+    return cmd
 
-def _set_value(module, full_key, value):
+def _get_command_compat(module, gsettings_path):
+    dbus_path = module.get_bin_path('dbus-launch', required=True)
+    kill_path = module.get_bin_path('kill', required=True)
+    cmd = (['export', ('`' + dbus_path + '`'), ';', gsettings_path,
+            ';', kill_path, '$DBUS_SESSION_BUS_PID > /dev/null 2>&1'])
+    return cmd
+
+def _get_command(module):
+    cmd = ([module.get_bin_path('dbus-run-session', required=False),
+            module.get_bin_path('gsettings', required=True)])
+    # Backwards compatibility with systems using dbus < 1.8.0
+    if cmd[0] is None:
+        cmd = _get_command_compat(module, cmd[1])
+    return cmd
+
+def _run_command(module, cmd, args):
+    if len(cmd) > 2:
+        # Backwards compatibility with systems using dbus < 1.8.0
+        cmd = _set_compat_args(cmd, args)
+        return module.run_command(cmd, use_unsafe_shell=True)
+    else:
+        return module.run_command(cmd + args)
+
+def _get_value(module, cmd, full_key):
+    schema, key = _split_key(full_key)
+    args = ['get', schema, key]
+    (rc, out, err) = _run_command(module, cmd, args)
+
+    if rc == 0:
+        return out
+    else:
+        module.fail_json(msg=err[:-1], rc=rc)
+
+def _set_value(module, cmd, full_key, value):
+    schema, key = _split_key(full_key)
+    args = ['set', schema, key, value]
+    (rc, out, err) = _run_command(module, cmd, args)
+
+    if rc == 0:
+        return out
+    else:
+        module.fail_json(msg="Failed to set value: %s" % value, rc=rc)
+
+def _reset_value(module, cmd, full_key):
     schema, single_key = _split_key(full_key)
-    args = ('set', schema, single_key, value)
-    return _run_command(module, args)
+    args = ['reset', schema, single_key]
+    (rc, out, err) = _run_command(module, cmd, args)
 
-def _get_value(module, full_key):
-    schema, single_key = _split_key(full_key)
-    args = ('get', schema, single_key)
-    return _run_command(module, args)[1][:-1]
+    if rc == 0:
+        return out
+    else:
+        module.fail_json(msg=err[:-1], rc=rc)
 
 def main():
     module = AnsibleModule(
         argument_spec = dict(
             key   = dict(required=True, type='str'),
-            value = dict(required=True, type='str'),
+            value = dict(type='str'),
+            state = dict(
+                default='present',
+                choices=['present', 'absent', 'get'],
+                type='str'
+            ),
         ),
         supports_check_mode = True
     )
@@ -75,21 +217,36 @@ def main():
     key = module.params['key']
     value = module.params['value']
 
-    result = {
-        'changed': False,
-        'key': key,
-        'value': value,
-        'old_value': None,
-    }
+    result = {'changed': False}
 
-    result['old_value'] = _get_value(module, key)
-    result['changed'] = result['old_value'] != value
+    # Get full paths for all commands
+    cmd = _get_command(module)
 
-    if result['changed'] and not module.check_mode:
-        _set_value(module, key, value)
+    # Reset value to default on state=absent
+    if params['state'] == 'absent':
+        if not module.check_mode:
+            _reset_value(module, cmd, key)
+        result['changed'] = True
+        module.exit_json(**result)
+
+    # Get the previous value
+    pre_value = _get_value(module, cmd, key)[:-1]
+    if params['state'] == 'get':
+        result['current_value'] = pre_value
+        module.exit_json(**result)
+
+    # Ensure value is set for all state=present operations
+    if params['state'] == 'present' and not value:
+        module.fail_json(msg='state=present requires "value" to be set')
+    # Set the new value if the current value does not match
+    if pre_value != value:
+        if not module.check_mode:
+            _set_value(module, cmd, key, value)
+        result['changed'] = True
+        result['new_value'] = value
+        result['previous_value'] = pre_value
 
     module.exit_json(**result)
 
-from ansible.module_utils.basic import AnsibleModule
 if __name__ == '__main__':
     main()
