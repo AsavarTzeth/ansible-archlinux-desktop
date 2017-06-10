@@ -1,65 +1,62 @@
 ---
-- name: install yubikey dependencies
-  pacman:
-    name: "{{ yubikey_packages }}"
-    update_cache: true
-  tags: yubikey
-
-- name: setup skel dirs
-  file:
-    path: "/etc/skel/{{ item.dir }}"
-    mode: "{{ item.mode }}"
-    state: directory
-  with_items: "{{ yubikey_dirs }}"
-  tags: yubikey
-
-- name: setup skel config
-  template:
-    src: "{{ item.file }}"
-    dest: "/etc/skel/{{ item.file }}"
-    mode: "{{ item.mode }}"
-  with_items: "{{ yubikey_files }}"
-  tags: yubikey
-
-- name: setup user dirs
-  file:
-    path: "/home/{{ item[0] }}/{{ item[1].dir }}"
-    mode: "{{ item[1].mode }}"
-    state: directory
-  with_nested:
-    - "{{ yubikey.users }}"
-    - "{{ yubikey_dirs }}"
-  become_user: "{{ item[0] }}"
-  tags: yubikey
-
-- name: setup user config
-  template:
-    src: "{{ item[1].file }}"
-    dest: "/home/{{ item[0] }}/{{ item[1].file }}"
-    mode: "{{ item[1].mode }}"
-  with_nested:
-    - "{{ yubikey.users }}"
-    - "{{ yubikey_files }}"
-  become_user: "{{ item[0] }}"
-  tags: yubikey
-
-- name: setup ssh pkcs11 provider
-  lineinfile:
-    dest: /etc/ssh/ssh_config
-    line: PKCS11Provider /usr/lib/opensc-pkcs11.so
-  tags: yubikey
-
 - block:
-  - name: setup pcscd.socket
-    systemd:
-      name: pcscd.socket
-      state: started
-      enabled: true
-  rescue:
-  - name: setup pcscd.socket manually
+  - name: install yubikey dependencies
+    pacman:
+      name: "{{ yubikey_packages }}"
+      update_cache: true
+
+  - name: setup skel dirs
     file:
-      src: "{{ item.src | default(omit) }}"
-      path: "{{ item.path }}"
-      state: "{{ item.state }}"
-    with_items: "{{ yubikey_rescue }}"
+      path: "/etc/skel/{{ item.dir }}"
+      mode: "{{ item.mode }}"
+      state: directory
+    with_items: "{{ yubikey_dirs }}"
+
+  - name: setup skel config
+    template:
+      src: "{{ item.file }}"
+      dest: "/etc/skel/{{ item.file }}"
+      mode: "{{ item.mode }}"
+    with_items: "{{ yubikey_files }}"
+
+  - name: setup user dirs
+    file:
+      path: "/home/{{ item[0] }}/{{ item[1].dir }}"
+      mode: "{{ item[1].mode }}"
+      state: directory
+    with_nested:
+      - "{{ yubikey.users }}"
+      - "{{ yubikey_dirs }}"
+    become_user: "{{ item[0] }}"
+
+  - name: setup user config
+    template:
+      src: "{{ item[1].file }}"
+      dest: "/home/{{ item[0] }}/{{ item[1].file }}"
+      mode: "{{ item[1].mode }}"
+    with_nested:
+      - "{{ yubikey.users }}"
+      - "{{ yubikey_files }}"
+    become_user: "{{ item[0] }}"
+
+  - name: setup ssh pkcs11 provider
+    lineinfile:
+      dest: /etc/ssh/ssh_config
+      line: PKCS11Provider /usr/lib/opensc-pkcs11.so
+
+  - block:
+    - name: setup pcscd.socket
+      systemd:
+        name: pcscd.socket
+        state: started
+        enabled: true
+    rescue:
+    - name: setup pcscd.socket manually
+      file:
+        src: "{{ item.src | default(omit) }}"
+        path: "{{ item.path }}"
+        state: "{{ item.state }}"
+      with_items: "{{ yubikey_rescue }}"
+
+  become: true
   tags: yubikey
