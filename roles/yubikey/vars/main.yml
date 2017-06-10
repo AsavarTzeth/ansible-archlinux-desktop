@@ -19,22 +19,12 @@ yubikey_files:
    mode: '0600'
  - file: .config/autostart/gnome-keyring-ssh.desktop
    mode: '0644'
- - file: .local/share/systemd/user/gpg-agent.service
-   mode: '0644'
 
 yubikey_dirs:
  - dir: .gnupg
    mode: '0700'
- - dir: .local/share/systemd/user
-   mode: '0755'
  - dir: .config/autostart
    mode: '0755'
- - dir: .config/systemd/user/default.target.wants
-   mode: '0755'
-
-yubikey_links:
- - target: .local/share/systemd/user/gpg-agent.service
-   link: .config/systemd/user/default.target.wants/gpg-agent.service
 
 yubikey_rescue:
   - path: /etc/systemd/system/socket.target.wants

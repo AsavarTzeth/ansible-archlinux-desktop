@@ -49,17 +49,6 @@
     line: PKCS11Provider /usr/lib/opensc-pkcs11.so
   tags: yubikey
 
-- name: enable user gpg-agent.service
-  file:
-    src: "/home/{{ item[0] }}/{{ item[1].target }}"
-    path: "/home/{{ item[0] }}/{{ item[1].link }}"
-    state: link
-  with_nested:
-    - "{{ yubikey.users }}"
-    - "{{ yubikey_links }}"
-  become_user: "{{ item[0] }}"
-  tags: yubikey
-
 - block:
   - name: setup pcscd.socket
     systemd:
