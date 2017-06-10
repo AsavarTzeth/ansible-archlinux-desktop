@@ -37,7 +37,7 @@
     - driver-gpu
     - AsavarTzeth.gnome
     # Desktop & user preferences
-    - { role: yubikey, when: yubikey.enabled | default(false) }
+    - { role: gnupg, when: yubikey.enabled | default(false) }
     - openvpn
     - user-packages
     # ansible-makepkg uses env var SUDO_USER when it drops to unprivileged user
