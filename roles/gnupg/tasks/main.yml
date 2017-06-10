@@ -1,8 +1,8 @@
 ---
 - block:
-  - name: install yubikey dependencies
+  - name: install gnupg deps
     pacman:
-      name: "{{ yubikey_packages }}"
+      name: "{{ gnupg_packages }}"
       update_cache: true
 
   - name: setup skel dirs
@@ -10,14 +10,14 @@
       path: "/etc/skel/{{ item.dir }}"
       mode: "{{ item.mode }}"
       state: directory
-    with_items: "{{ yubikey_dirs }}"
+    with_items: "{{ gnupg_dirs }}"
 
   - name: setup skel config
     template:
       src: "{{ item.file }}"
       dest: "/etc/skel/{{ item.file }}"
       mode: "{{ item.mode }}"
-    with_items: "{{ yubikey_files }}"
+    with_items: "{{ gnupg_files }}"
 
   - name: setup user dirs
     file:
@@ -26,7 +26,7 @@
       state: directory
     with_nested:
       - "{{ yubikey.users }}"
-      - "{{ yubikey_dirs }}"
+      - "{{ gnupg_dirs }}"
     become_user: "{{ item[0] }}"
 
   - name: setup user config
@@ -36,7 +36,7 @@
       mode: "{{ item[1].mode }}"
     with_nested:
       - "{{ yubikey.users }}"
-      - "{{ yubikey_files }}"
+      - "{{ gnupg_files }}"
     become_user: "{{ item[0] }}"
 
   - name: setup ssh pkcs11 provider
@@ -56,7 +56,7 @@
         src: "{{ item.src | default(omit) }}"
         path: "{{ item.path }}"
         state: "{{ item.state }}"
-      with_items: "{{ yubikey_rescue }}"
+      with_items: "{{ gnupg_rescue }}"
 
   become: true
-  tags: yubikey
+  tags: gnupg,gpg,gpg-agent,yubikey

@@ -2,7 +2,7 @@
 # Unquoted variables used with mode in the template module will for some reason
 # translate to incorrect permissions. Example: 0644 becomes 420
 
-yubikey_packages:
+gnupg_packages:
  - gnupg
  - openssh
  - opensc
@@ -10,7 +10,7 @@ yubikey_packages:
  - libusb-compat
  - libu2f-host
 
-yubikey_files:
+gnupg_files:
  - file: .pam_environment
    mode: '0644'
  - file: .gnupg/gpg-agent.conf
@@ -20,13 +20,13 @@ yubikey_files:
  - file: .config/autostart/gnome-keyring-ssh.desktop
    mode: '0644'
 
-yubikey_dirs:
+gnupg_dirs:
  - dir: .gnupg
    mode: '0700'
  - dir: .config/autostart
    mode: '0755'
 
-yubikey_rescue:
+gnupg_rescue:
   - path: /etc/systemd/system/socket.target.wants
     state: directory
   - path: /etc/systemd/system/socket.target.wants/pcscd.socket
