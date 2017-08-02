@@ -15,4 +15,4 @@ fstab_entries:
     src: efivarfs
     fstype: efivarfs
     opts: ro,nodev,nosuid,noexec,noatime
-    when: efivars.stat.exists
+    state: "{{ 'mounted' if efivars.stat.exists else 'absent' }}"

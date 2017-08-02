@@ -10,8 +10,7 @@
     src: "{{ item.src }}"
     fstype: "{{ item.fstype }}"
     opts: "{{ item.opts }}"
-    state: mounted
-  when: "{{ item.when | default (true) }}"
+    state: "{{ item.state | default('mounted') }}"
   with_items: "{{ fstab_entries }}"
   tags: fstab
 
