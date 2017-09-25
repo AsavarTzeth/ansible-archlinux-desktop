@@ -11,15 +11,15 @@
   tags: gpu,amd,intel,nvidia
 
 - block:
-  - include: nvidia.yml
+  - import_tasks: nvidia.yml
     when: graphics.stdout.find('NVIDIA') != -1
     tags: nvidia
 
-  - include: amd.yml
+  - import_tasks: amd.yml
     when: graphics.stdout.find('AMD') != -1
     tags: amd
 
-  - include: intel.yml
+  - import_tasks: intel.yml
     when: graphics.stdout.find('Intel') != -1
     tags: intel
   tags: gpu
